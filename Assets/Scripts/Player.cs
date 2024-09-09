@@ -76,7 +76,11 @@ public class Player : MonoBehaviour
 
         if (_InteractableList.Contains(interact))
         {
+            if (_selectedInteractable == interact)
+                selectedInteractable = null;
+
             _InteractableList.Remove(interact);
+
         }
 
         if (_InteractableList.Count == 0)
@@ -95,6 +99,9 @@ public class Player : MonoBehaviour
 
         foreach (var interact in _InteractableList)
         {
+            if (!interact.isInteractable)
+                continue;
+
             Vector3 DifferenceToTarget = interact.transform.position - currentPosition;
             float DistanceToTarget = DifferenceToTarget.sqrMagnitude;
 
