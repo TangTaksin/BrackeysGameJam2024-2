@@ -55,7 +55,7 @@
  </tile>
  <tile id="147">
   <objectgroup draworder="index" id="2">
-   <object id="1" x="0.325976" y="3.22354" width="15.5382" height="10.5037"/>
+   <object id="1" x="0.108585" y="7.83224" width="15.7556" height="5.895"/>
   </objectgroup>
  </tile>
  <tile id="148">
