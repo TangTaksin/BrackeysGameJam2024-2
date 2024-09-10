@@ -44,3 +44,6 @@ TagManager:
   - name: Player
     uniqueID: 2364389507
     locked: 0
+  - name: Interact
+    uniqueID: 3543762619
+    locked: 0
