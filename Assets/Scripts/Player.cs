@@ -31,6 +31,8 @@ public class Player : MonoBehaviour
 
     [SerializeReference] List<Interactable> _InteractableList = new List<Interactable>();
 
+    [SerializeReference] ItemData _heldItem;
+
     Vector2 _InputVector2;
     Vector2 _facingVector2 = Vector2.down;
 
@@ -116,6 +118,17 @@ public class Player : MonoBehaviour
     public void OnInteract()
     {
         if (_selectedInteractable != null)
-        _selectedInteractable.Interact();
+        {
+            if (_heldItem != null)
+                _heldItem.UseItem(_selectedInteractable);
+            else
+                _selectedInteractable.Interact(this);
+        }
+
+    }
+
+    public void SetItem(ItemData _item)
+    {
+        _heldItem = _item;
     }
 }

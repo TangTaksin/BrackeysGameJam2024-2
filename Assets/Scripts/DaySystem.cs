@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IInteractable
+public class DaySystem : MonoBehaviour
 {
-    public void Interact();
+
+    public delegate void DayEvent();
+    
+
 }
