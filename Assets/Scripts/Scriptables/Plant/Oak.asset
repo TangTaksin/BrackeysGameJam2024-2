@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d28cb4c76397031468d60d7980b78e2f, type: 3}
+  m_Name: Oak
+  m_EditorClassIdentifier: 
+  normal: {fileID: 127525855, guid: 5024623d2f213d04f89b9aa6d42b3e70, type: 3}
+  hurt: {fileID: -1943559943, guid: 8f3896b56045ecd42b1365d336bedb9b, type: 3}
+  dead: {fileID: 1348631096, guid: 8f3896b56045ecd42b1365d336bedb9b, type: 3}
+  reenforce: {fileID: -1386661351, guid: 5024623d2f213d04f89b9aa6d42b3e70, type: 3}
+  baseHitPoint: 2
+  daysToHeal: 1
+  resistance: 3

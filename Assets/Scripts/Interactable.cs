@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Interactable : MonoBehaviour, IInteractable
+public class Interactable : MonoBehaviour
 {
 
     public bool isInteractable;
 
-    public virtual void Interact()
+    public virtual void Interact(Player _player)
     {
-        print("You interact with" + name);
+        
     }
 }
