@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     Rigidbody2D _body;
+    Animator _animator;
 
     float _movementSpeed;
     public float baseWalkSpeed;
@@ -35,10 +36,12 @@ public class Player : MonoBehaviour
 
     Vector2 _InputVector2;
     Vector2 _facingVector2 = Vector2.down;
+    Vector2 _lastMoveDirection = Vector2.down;
 
     private void Start()
     {
-        _body = GetComponent<Rigidbody2D>();    
+        _body = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -50,8 +53,28 @@ public class Player : MonoBehaviour
 
     private void UpdateMovement()
     {
-       _movementSpeed = baseWalkSpeed;
+        _movementSpeed = baseWalkSpeed;
         _body.position += _InputVector2 * _movementSpeed * Time.deltaTime;
+
+        // Update animation parameters for movement and idle
+        if (_InputVector2 != Vector2.zero)
+        {
+            _animator.SetFloat("Horizontal", _InputVector2.x);
+            _animator.SetFloat("Vertical", _InputVector2.y);
+            _animator.SetFloat("Speed", _InputVector2.sqrMagnitude);
+
+            // Update the last direction when moving
+            _lastMoveDirection = _InputVector2.normalized;
+        }
+        else
+        {
+            // Player is idle, use the last movement direction
+            _animator.SetFloat("Horizontal", _lastMoveDirection.x);
+            _animator.SetFloat("Vertical", _lastMoveDirection.y);
+            _animator.SetFloat("Speed", 0);  // Set Speed to 0 to trigger idle
+        }
+
+
     }
 
     public void OnMove(InputValue _value)
@@ -70,7 +93,9 @@ public class Player : MonoBehaviour
         {
             _InteractableList.Add(interact);
         }
+
     }
+
 
     private void OnTriggerExit2D(Collider2D collision)
     {
