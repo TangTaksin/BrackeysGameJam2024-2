@@ -17,5 +17,5 @@ MonoBehaviour:
   dead: {fileID: 1348631096, guid: 8f3896b56045ecd42b1365d336bedb9b, type: 3}
   reenforce: {fileID: -1386661351, guid: 5024623d2f213d04f89b9aa6d42b3e70, type: 3}
   baseHitPoint: 2
-  daysToHeal: 1
+  daysToHeal: 2
   resistance: 3
