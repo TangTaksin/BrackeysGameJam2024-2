@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using TMPro;
+using UnityEngine.UI; // Include UI namespace for Slider
 
 public class DayNightCycle : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class DayNightCycle : MonoBehaviour
     public float nightDuration = 20f; // Duration of nighttime in seconds
     public float spotlightMaxIntensity = 1f; // Maximum intensity of the player's spotlight
     public TextMeshProUGUI clockText; // TextMeshPro component to display the time
+    public Slider timeSlider; // UI Slider to synchronize with time
     public float timeScale = 1f; // Factor to adjust the speed of time
 
     private float timer; // Timer to keep track of the time of day
@@ -34,11 +36,25 @@ public class DayNightCycle : MonoBehaviour
             Debug.LogWarning("Clock TextMeshPro component not assigned!"); // Warning if clock text is missing
         }
 
+        if (timeSlider == null)
+        {
+            Debug.LogWarning("Time Slider not assigned!"); // Warning if slider is missing
+        }
+
         timer = 0f;
         totalCycleDuration = dayDuration + nightDuration; // Calculate total duration of the cycle
         isCycleStopped = false; // Start with the cycle running
         playerSpotlight.intensity = 0f; // Initialize spotlight intensity
         playerSpotlight.enabled = false; // Ensure spotlight is off initially
+
+        // Initialize slider
+        if (timeSlider != null)
+        {
+            timeSlider.minValue = 0f;
+            timeSlider.maxValue = 1f;
+            timeSlider.value = 0f; // Start slider at 0
+            timeSlider.onValueChanged.AddListener(OnSliderValueChanged); // Add listener to handle slider changes
+        }
     }
 
     void Update()
@@ -57,6 +73,12 @@ public class DayNightCycle : MonoBehaviour
         UpdateLightAndSpotlight(timeOfDay); // Adjust light and spotlight based on time of day
 
         UpdateClock(timeOfDay); // Update the clock display
+
+        // Update the slider value
+        if (timeSlider != null)
+        {
+            timeSlider.value = timeOfDay; // Sync slider with time of day
+        }
 
         if (timer >= totalCycleDuration)
         {
@@ -112,5 +134,11 @@ public class DayNightCycle : MonoBehaviour
         {
             clockText.text = timeString; // Update the clock text
         }
+    }
+
+    // Method to handle changes to the slider value
+    private void OnSliderValueChanged(float value)
+    {
+        timer = value * totalCycleDuration; // Adjust the timer based on the slider value
     }
 }
