@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 637c519d17dce7949b7f9c43e4906aff
+guid: e1e134e14ed769b4e89ed2b5bcd0e3eb
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -11,5 +11,5 @@ ScriptedImporter:
   importerVersion: 17
   pixelsPerUnit: 16
   edgesPerEllipse: 32
-  numberOfObjectsImported: 458
+  numberOfObjectsImported: 122
   colliderType: 0
