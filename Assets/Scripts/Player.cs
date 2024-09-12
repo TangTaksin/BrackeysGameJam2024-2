@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
 {
     Rigidbody2D _body;
 
+    bool _canAct;
+
     float _movementSpeed;
     public float baseWalkSpeed;
 
@@ -14,7 +16,10 @@ public class Player : MonoBehaviour
     public float baseStamina;
 
     public delegate void OnVariableChangeDelegate(Interactable newVal);
-    public static event OnVariableChangeDelegate OnVariableChange;
+    public static OnVariableChangeDelegate OnVariableChange;
+
+    public delegate void PlayerBoolEvent(bool _value);
+    public static PlayerBoolEvent ChangePlayerCanActBool;
 
     [SerializeReference] Interactable _selectedInteractable;
     public Interactable selectedInteractable
@@ -41,6 +46,21 @@ public class Player : MonoBehaviour
         _body = GetComponent<Rigidbody2D>();    
     }
 
+    private void OnEnable()
+    {
+        ChangePlayerCanActBool += SetActionBool;
+    }
+
+    private void OnDisable()
+    {
+        ChangePlayerCanActBool -= SetActionBool;
+    }
+
+    void SetActionBool(bool _value)
+    {
+        _canAct = _value;
+    }
+
     private void Update()
     {
         UpdateMovement();
@@ -56,6 +76,9 @@ public class Player : MonoBehaviour
 
     public void OnMove(InputValue _value)
     {
+        if (!_canAct)
+            return;
+
         _InputVector2 = _value.Get<Vector2>();
         var vMag = _InputVector2.SqrMagnitude();
 
@@ -117,10 +140,22 @@ public class Player : MonoBehaviour
 
     public void OnInteract()
     {
+        if (!_canAct)
+            return;
+
         if (_selectedInteractable != null)
         {
             if (_heldItem != null)
-                _heldItem.UseItem(_selectedInteractable);
+            {
+                var used = _heldItem.UseItem(_selectedInteractable);
+                if (used)
+                {
+                    _stamina -= _heldItem.cost;
+                    _heldItem = null;
+                }
+                else
+                    _selectedInteractable.Interact(this);
+            }
             else
                 _selectedInteractable.Interact(this);
         }

@@ -6,10 +6,26 @@ public class PlantGroup : MonoBehaviour
 {
     public Plant[] plantGroup;
 
-    int _baseIntegrity;
-    int _integrity;
+    float _baseIntegrity;
+    float _integrity;
 
-    void GetDefaultIntegrity()
+    public int _damagedCount;
+    public int _deadCount;
+    public int _PreventedCount;
+
+    private void OnEnable()
+    {
+        StormSystem.OnStormEnd += UpdateOverall;
+        Plant.OnDamage += DamageCheck;
+    }
+
+    private void OnDisable()
+    {
+        StormSystem.OnStormEnd += UpdateOverall;
+        Plant.OnDamage += DamageCheck;
+    }
+
+    public void GetDefaultIntegrity()
     {
         foreach (var plant in plantGroup)
         {
@@ -17,11 +33,36 @@ public class PlantGroup : MonoBehaviour
         }
     }
 
-    void CheckOverallIntegrity()
+    public void CheckOverallIntegrity()
     {
         foreach (var plant in plantGroup)
         {
             _integrity += plant.hitPoints;
         }
     }
+
+    public void UpdateOverall()
+    {
+        GetDefaultIntegrity();
+        CheckOverallIntegrity();
+    }
+
+    public float GetOveallStatus()
+    {
+        return _integrity / _baseIntegrity;
+    }
+
+    void DamageCheck(int _takenDamage, bool _resisted, bool _proteted, bool _died)
+    {
+        if (_takenDamage > 0)
+            _damagedCount++;
+
+        if (_proteted)
+            _PreventedCount++;
+
+        if (_died)
+            _deadCount++;
+    }
+
+    
 }

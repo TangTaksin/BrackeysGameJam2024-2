@@ -36,7 +36,8 @@ public class GameplayUI : MonoBehaviour
         print(_in);
         _targetTransform = _in;
         
-        targetImg.gameObject.SetActive(_targetTransform != null);
+        if (targetImg)
+            targetImg.gameObject.SetActive(_targetTransform != null);
     }
 
     void UpdateTargetImg()

@@ -6,6 +6,6 @@ public class Bed : Interactable
 {
     public override void Interact(Player _player)
     {
-        DaySystem.OnTimeOver?.Invoke();
+        DaySystem.OnTimeOut?.Invoke();
     }
 }
