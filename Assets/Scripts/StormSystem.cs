@@ -10,8 +10,23 @@ public class StormSystem : MonoBehaviour
     public elements[] StormType;
     public int targets;
 
+    public delegate void StormEvent();
+    public static StormEvent OnStormEnd;
+
+    private void OnEnable()
+    {
+        DaySystem.OnPrepareEnd += OnPrepareTimeOver;
+    }
+
+    private void OnDisable()
+    {
+        DaySystem.OnPrepareEnd += OnPrepareTimeOver;
+    }
+
     public void StormRound()
     {
+        print("Storm!");
+
         FindAllPossibleTarget();
 
         if (possibleTarget.Count > 0)
@@ -20,6 +35,8 @@ public class StormSystem : MonoBehaviour
             DealDamage();
             ClearTargetList();
         }
+
+        OnStormEnd?.Invoke();
     }
 
     void FindAllPossibleTarget()
@@ -56,5 +73,18 @@ public class StormSystem : MonoBehaviour
     {
         possibleTarget.Clear();
         selectedTargets.Clear();
+    }
+
+    void OnPrepareTimeOver()
+    {
+        print("Time Over! Preparing the storm");
+        Transition.FadeInOver += OnPrepareFadedOut;
+    }
+
+    void OnPrepareFadedOut()
+    {
+        print("Fade Out Over! Calling the storm");
+        StormRound();
+        Transition.FadeInOver -= OnPrepareFadedOut;
     }
 }

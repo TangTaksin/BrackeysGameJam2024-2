@@ -10,16 +10,22 @@ public class DaySystem : MonoBehaviour
     bool isTicking;
 
     public delegate void DayEvent();
-    public static DayEvent OnTimeOver;
+    
+    public static DayEvent OnDayStart; 
+    public static DayEvent OnTimeOut; 
+    public static DayEvent OnPrepareEnd; 
+    public static DayEvent OnDayEnd;
 
     private void OnEnable()
     {
-        OnTimeOver += TriggerTimeOver;
+        OnTimeOut += TriggerTimeOver;
+        OnDayEnd += TriggerNextDay;
     }
 
     private void OnDisable()
     {
-        OnTimeOver -= TriggerTimeOver;
+        OnTimeOut -= TriggerTimeOver;
+        OnDayEnd -= TriggerNextDay;
     }
 
     private void Update()
@@ -43,6 +49,10 @@ public class DaySystem : MonoBehaviour
 
     public void RestartTimer()
     {
+        OnDayStart?.Invoke();
+
+        Player.ChangePlayerCanActBool?.Invoke(true);
+        
         remainTime = prepareTime;
         isTicking = true;
     }
@@ -56,7 +66,7 @@ public class DaySystem : MonoBehaviour
     {
         if (remainTime <= 0)
         {
-            OnTimeOver?.Invoke();
+            OnTimeOut?.Invoke();
         }
     }
 
@@ -64,5 +74,14 @@ public class DaySystem : MonoBehaviour
     {
         remainTime = 0;
         isTicking = false;
+
+        Player.ChangePlayerCanActBool?.Invoke(false);
+        Transition.CalledFadeIn?.Invoke();
+        OnPrepareEnd?.Invoke();
+    }
+
+    void TriggerNextDay()
+    {
+        RestartTimer();
     }
 }

@@ -19,6 +19,10 @@ public class Plant : Interactable, IDamagable
 
     public bool isProtected;
 
+    public delegate void PlantEvent(int damage, bool _resisted, bool _proteted, bool _died);
+    public static PlantEvent OnDamage;
+
+
     private void Start()
     {
         plantImg = GetComponent<SpriteRenderer>();
@@ -52,6 +56,7 @@ public class Plant : Interactable, IDamagable
         }
 
         SpriteUpdate();
+        OnDamage?.Invoke(finalDamage, isResist, isProtected, isDead);
     }
 
     public void RecoverHealth(int amount)
