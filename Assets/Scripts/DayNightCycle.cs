@@ -1,59 +1,71 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using TMPro;
-using UnityEngine.UI; // Include UI namespace for Slider
+using UnityEngine.UI;
 
 public class DayNightCycle : MonoBehaviour
 {
-    public Light2D globalLight; // The global light for the environment
-    public Light2D playerSpotlight; // The player's spotlight
-    [SerializeField] private Gradient dayNightGradient; // Gradient to transition between day and night
+    public Light2D globalLight; // Global light for the environment
+    public Light2D playerSpotlight; // Player's spotlight
+    [SerializeField] private Gradient dayNightGradient; // Gradient for day-night transition
     public float dayDuration = 40f; // Duration of daytime in seconds
     public float nightDuration = 20f; // Duration of nighttime in seconds
     public float spotlightMaxIntensity = 1f; // Maximum intensity of the player's spotlight
-    public TextMeshProUGUI clockText; // TextMeshPro component to display the time
-    public Slider timeSlider; // UI Slider to synchronize with time
-    public float timeScale = 1f; // Factor to adjust the speed of time
+    public TextMeshProUGUI clockText; // TextMeshPro component for the time display
+    public Image timeFillImage; // UI Image for time progress
+    public float timeScale = 1f; // Speed of time progression
 
-    private float timer; // Timer to keep track of the time of day
-    private float totalCycleDuration; // Total duration of a complete day-night cycle
-    private bool isCycleStopped; // Flag to indicate when the cycle should stop
+    private float timer; // Timer for tracking the time of day
+    private float totalCycleDuration; // Total duration of the day-night cycle
+    private bool isCycleStopped; // Flag to indicate if the cycle is stopped
+
+    // Reference to DaySystem
+    public DaySystem daySystem;
 
     void Start()
     {
         if (globalLight == null)
         {
-            globalLight = GetComponent<Light2D>(); // Assign global light if not set
+            globalLight = GetComponent<Light2D>();
         }
 
         if (playerSpotlight == null)
         {
-            Debug.LogWarning("Player Spotlight not assigned!"); // Warning if spotlight is missing
+            Debug.LogWarning("Player Spotlight not assigned!");
         }
 
         if (clockText == null)
         {
-            Debug.LogWarning("Clock TextMeshPro component not assigned!"); // Warning if clock text is missing
+            Debug.LogWarning("Clock TextMeshPro component not assigned!");
         }
 
-        if (timeSlider == null)
+        if (timeFillImage == null)
         {
-            Debug.LogWarning("Time Slider not assigned!"); // Warning if slider is missing
+            Debug.LogWarning("Time Fill Image not assigned!");
         }
 
         timer = 0f;
-        totalCycleDuration = dayDuration + nightDuration; // Calculate total duration of the cycle
-        isCycleStopped = false; // Start with the cycle running
-        playerSpotlight.intensity = 0f; // Initialize spotlight intensity
-        playerSpotlight.enabled = false; // Ensure spotlight is off initially
+        totalCycleDuration = dayDuration + nightDuration;
+        isCycleStopped = true; // Start with the cycle stopped
+        playerSpotlight.intensity = 0f;
+        playerSpotlight.enabled = false;
+        globalLight.intensity = .7f;
 
-        // Initialize slider
-        if (timeSlider != null)
+        if (daySystem != null)
         {
-            timeSlider.minValue = 0f;
-            timeSlider.maxValue = 1f;
-            timeSlider.value = 0f; // Start slider at 0
-            timeSlider.onValueChanged.AddListener(OnSliderValueChanged); // Add listener to handle slider changes
+            DaySystem.OnDayStart += RestartCycle;
+            DaySystem.OnTimeOut += StopCycle;
+            DaySystem.OnPrepareEnd += StartCycle;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (daySystem != null)
+        {
+            DaySystem.OnDayStart -= RestartCycle;
+            DaySystem.OnTimeOut -= StopCycle;
+            DaySystem.OnPrepareEnd -= StartCycle;
         }
     }
 
@@ -61,84 +73,87 @@ public class DayNightCycle : MonoBehaviour
     {
         if (isCycleStopped)
         {
-            return; // Skip updating if the cycle has stopped
+            return; // Skip update if the cycle is stopped
         }
 
-        timer += Time.deltaTime * timeScale; // Update timer based on time scale
+        timer += Time.deltaTime * timeScale;
+        float timeOfDay = Mathf.PingPong(timer / totalCycleDuration, 1f);
 
-        float timeOfDay = Mathf.PingPong(timer / totalCycleDuration, 1f); // Calculate time of day
+        globalLight.color = dayNightGradient.Evaluate(timeOfDay);
+        UpdateLightAndSpotlight(timeOfDay);
+        UpdateClock(timeOfDay);
 
-        globalLight.color = dayNightGradient.Evaluate(timeOfDay); // Update global light color based on gradient
-
-        UpdateLightAndSpotlight(timeOfDay); // Adjust light and spotlight based on time of day
-
-        UpdateClock(timeOfDay); // Update the clock display
-
-        // Update the slider value
-        if (timeSlider != null)
+        if (timeFillImage != null)
         {
-            timeSlider.value = timeOfDay; // Sync slider with time of day
+            timeFillImage.fillAmount = timeOfDay;
         }
 
         if (timer >= totalCycleDuration)
         {
-            isCycleStopped = true; // Stop the cycle when reaching the end of the duration
-            timer = totalCycleDuration; // Ensure timer is set to the end value
+            isCycleStopped = true;
+            timer = totalCycleDuration;
+            DaySystem.OnDayEnd?.Invoke();
+            DaySystem.OnTimeOut?.Invoke();
         }
     }
 
     private void UpdateLightAndSpotlight(float timeOfDay)
     {
-        float dayProgress = Mathf.Clamp01(timeOfDay / 0.5f); // Progress within the day phase
-        float nightProgress = Mathf.Clamp01((timeOfDay - 0.5f) / 0.5f); // Progress within the night phase
+        float dayProgress = Mathf.Clamp01(timeOfDay / 0.5f);
+        float nightProgress = Mathf.Clamp01((timeOfDay - 0.5f) / 0.5f);
 
         if (timeOfDay < 0.5f)
         {
-            globalLight.intensity = Mathf.Lerp(0.7f, 0.8f, dayProgress); // Adjust global light intensity for daytime
-            playerSpotlight.enabled = false; // Turn off the spotlight during the day
+            globalLight.intensity = Mathf.Lerp(0.7f, 0.8f, dayProgress);
+            playerSpotlight.enabled = false;
         }
         else
         {
-            globalLight.intensity = Mathf.Lerp(0.8f, 0.1f, nightProgress); // Adjust global light intensity for nighttime
+            globalLight.intensity = Mathf.Lerp(0.8f, 0.1f, nightProgress);
             if (!playerSpotlight.enabled)
             {
-                playerSpotlight.enabled = true; // Enable the spotlight if not already enabled
+                playerSpotlight.enabled = true;
             }
-            playerSpotlight.intensity = Mathf.Lerp(playerSpotlight.intensity, spotlightMaxIntensity, Time.deltaTime * 1.5f); // Smoothly increase spotlight intensity
+            playerSpotlight.intensity = Mathf.Lerp(playerSpotlight.intensity, spotlightMaxIntensity, Time.deltaTime * 1.5f);
         }
     }
 
     private void UpdateClock(float timeOfDay)
     {
-        float startHour = 7f; // Start time of the day phase
-        float endHour = 19f; // End time of the day phase
-        float nightStartHour = 19.01f; // Start time of the night phase
-        float nightEndHour = 24f; // End time of the night phase
+        float startHour = 7f;
+        float endHour = 19f;
+        float nightStartHour = 19.01f;
+        float nightEndHour = 24f;
 
-        float currentHour;
-        if (timeOfDay < 0.5f)
-        {
-            currentHour = Mathf.Lerp(startHour, endHour, timeOfDay * 2f); // Calculate current hour during the day phase
-        }
-        else
-        {
-            currentHour = Mathf.Lerp(nightStartHour, nightEndHour, (timeOfDay - 0.5f) * 2f); // Calculate current hour during the night phase
-        }
+        float currentHour = timeOfDay < 0.5f
+            ? Mathf.Lerp(startHour, endHour, timeOfDay * 2f)
+            : Mathf.Lerp(nightStartHour, nightEndHour, (timeOfDay - 0.5f) * 2f);
 
-        int hours = Mathf.FloorToInt(currentHour); // Extract hours
-        int minutes = Mathf.FloorToInt((currentHour - hours) * 60f); // Extract minutes
+        int hours = Mathf.FloorToInt(currentHour);
+        int minutes = Mathf.FloorToInt((currentHour - hours) * 60f);
 
-        string timeString = $"{hours:D2}:{minutes:D2}"; // Format time as HH:MM
+        string timeString = $"{hours:D2}:{minutes:D2}";
 
         if (clockText != null)
         {
-            clockText.text = timeString; // Update the clock text
+            clockText.text = timeString;
         }
     }
 
-    // Method to handle changes to the slider value
-    private void OnSliderValueChanged(float value)
+    public void RestartCycle()
     {
-        timer = value * totalCycleDuration; // Adjust the timer based on the slider value
+        isCycleStopped = false;
+        timer = 0f;
+        Player.ChangePlayerCanActBool?.Invoke(true);
+    }
+
+    public void StartCycle()
+    {
+        isCycleStopped = false;
+    }
+
+    public void StopCycle()
+    {
+        isCycleStopped = true;
     }
 }
