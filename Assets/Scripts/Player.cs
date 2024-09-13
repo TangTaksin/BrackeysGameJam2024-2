@@ -7,16 +7,38 @@ public class Player : MonoBehaviour
 {
     Rigidbody2D _body;
 
+    public Transform player_starting_point;
+
     bool _canAct;
 
     float _movementSpeed;
     public float baseWalkSpeed;
 
     float _stamina;
-    public float baseStamina;
+    float stamina
+    {
+        get { return _stamina; }
+        set 
+        {
+            if (_stamina == value) return;
 
-    public delegate void OnVariableChangeDelegate(Interactable newVal);
-    public static OnVariableChangeDelegate OnVariableChange;
+                _stamina = value;
+
+            if (OnStaminaChange != null)
+                OnStaminaChange?.Invoke(_stamina, baseStamina);
+        }
+    }
+
+    public float baseStamina;
+    [Range(0,100)] public float StaminaOutPenelty = 50;
+    bool stamina_outted;
+
+    public delegate void OnObjectChangeDelegate(object newVal);
+    public static OnObjectChangeDelegate OnInteractableChange;
+    public static OnObjectChangeDelegate OnItemChange;
+
+    public delegate void OnFloatsChangeDelegate(float _valueA, float _valueB);
+    public static OnFloatsChangeDelegate OnStaminaChange;
 
     public delegate void PlayerBoolEvent(bool _value);
     public static PlayerBoolEvent ChangePlayerCanActBool;
@@ -28,15 +50,29 @@ public class Player : MonoBehaviour
         set
         {
             if (_selectedInteractable == value) return;
+
             _selectedInteractable = value;
-            if (OnVariableChange != null)
-                OnVariableChange?.Invoke(_selectedInteractable);
+
+            if (OnInteractableChange != null)
+                OnInteractableChange?.Invoke(_selectedInteractable);
         }
     }
 
     [SerializeReference] List<Interactable> _InteractableList = new List<Interactable>();
 
     [SerializeReference] ItemData _heldItem;
+    public ItemData heldItem
+    {
+        get { return _heldItem; }
+        set {
+            if (_heldItem == value) return;
+
+            _heldItem = value;
+
+            if (OnItemChange != null)
+                OnItemChange?.Invoke(_heldItem);
+        }
+    }
 
     Vector2 _InputVector2;
     Vector2 _facingVector2 = Vector2.down;
@@ -49,11 +85,13 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         ChangePlayerCanActBool += SetActionBool;
+        DaySystem.OnDayStart += OnNewDay;
     }
 
     private void OnDisable()
     {
         ChangePlayerCanActBool -= SetActionBool;
+        DaySystem.OnDayStart -= OnNewDay;
     }
 
     void SetActionBool(bool _value)
@@ -147,11 +185,17 @@ public class Player : MonoBehaviour
         {
             if (_heldItem != null)
             {
-                var used = _heldItem.UseItem(_selectedInteractable);
+                var used = false;
+
+                var enoughStamina = (stamina >= heldItem.cost);
+
+                if (enoughStamina)
+                    used = _heldItem.UseItem(_selectedInteractable);
+
                 if (used)
                 {
-                    _stamina -= _heldItem.cost;
-                    _heldItem = null;
+                    DrainStamina(_heldItem.cost);
+                    SetItem(null);
                 }
                 else
                     _selectedInteractable.Interact(this);
@@ -164,6 +208,38 @@ public class Player : MonoBehaviour
 
     public void SetItem(ItemData _item)
     {
-        _heldItem = _item;
+        heldItem = _item;
+    }
+
+    public void DrainStamina(float _amount)
+    {
+        stamina -= _amount;
+
+        if (stamina <= 0)
+        {
+            stamina = 0;
+            stamina_outted = true;
+        }
+
+        if (stamina > baseStamina)
+        {
+            stamina = baseStamina;
+        }
+    }
+
+    public void OnNewDay()
+    {
+        if (player_starting_point)
+            transform.position = player_starting_point.position;
+
+        if (stamina_outted)
+        {
+            stamina_outted = false;
+            stamina = baseStamina * (StaminaOutPenelty / 100);
+        }
+        else
+            stamina = baseStamina;
+
+        _InputVector2 = Vector2.zero;
     }
 }

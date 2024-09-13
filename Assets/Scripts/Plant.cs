@@ -63,7 +63,7 @@ public class Plant : Interactable, IDamagable
         if (hitPoints <= 0)
         {
             isDead = true;
-            
+            isInteractable = false;
         }
 
         SpriteUpdate();

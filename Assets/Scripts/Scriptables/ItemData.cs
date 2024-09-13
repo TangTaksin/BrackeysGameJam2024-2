@@ -4,21 +4,13 @@ using UnityEngine;
 
 public class ItemData : ScriptableObject
 {
+    public Sprite item_icon;
     public float cost;
     public GameObject pickUpObject;
 
     protected bool isUsed;
 
     public virtual bool UseItem(Interactable interactable)
-    {
-        return isUsed;
-    }
-}
-
-[CreateAssetMenu(fileName = "Item Data", menuName = "Item Data/Plant Restorative")]
-public class ItemPlantRestorative : ItemData
-{
-    public override bool UseItem(Interactable interactable)
     {
         return isUsed;
     }

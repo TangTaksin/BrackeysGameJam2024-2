@@ -9,6 +9,7 @@ public class StormSystem : MonoBehaviour
     public List<IDamagable> selectedTargets = new List<IDamagable>();
     public elements[] StormType;
     public int targets;
+    public int minTargets = 5, maxTargets = 10;
 
     public delegate void StormEvent();
     public static StormEvent OnStormEnd;
@@ -16,11 +17,31 @@ public class StormSystem : MonoBehaviour
     private void OnEnable()
     {
         DaySystem.OnPrepareEnd += OnPrepareTimeOver;
+        DaySystem.OnDayStart += OnNewDay;
     }
 
     private void OnDisable()
     {
-        DaySystem.OnPrepareEnd += OnPrepareTimeOver;
+        DaySystem.OnPrepareEnd -= OnPrepareTimeOver;
+        DaySystem.OnDayStart -= OnNewDay;
+    }
+
+    void OnNewDay()
+    {
+        RandomizeStorm();
+    }
+
+    public void RandomizeStorm()
+    {
+        var elementToRand = Random.Range(1, 5);
+        StormType = new elements[elementToRand];
+        for (int i = 0; i < elementToRand; i++)
+        {
+            var eleindex = Random.Range(1, 5);
+            StormType[i] = Elements.IntToElement(eleindex);
+        }
+        
+        targets = Random.Range(minTargets, maxTargets + 1);
     }
 
     public void StormRound()
@@ -63,7 +84,7 @@ public class StormSystem : MonoBehaviour
     {
         foreach(var _dmg in selectedTargets)
         {
-            var eleindex = Random.Range(0, StormType.Length);
+            var eleindex = Random.Range(1, StormType.Length);
 
             _dmg.TakeDamage(StormType[eleindex], 1);
         }

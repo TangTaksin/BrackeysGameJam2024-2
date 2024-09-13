@@ -63,7 +63,10 @@ public class PlantGroup : MonoBehaviour
             _PreventedCount++;
 
         if (_died)
+        {
             _deadCount++;
+            _damagedCount--;
+        }
     }
 
     void ResetStatistic()
