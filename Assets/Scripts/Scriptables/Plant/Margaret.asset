@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d28cb4c76397031468d60d7980b78e2f, type: 3}
+  m_Name: Margaret
+  m_EditorClassIdentifier: 
+  normal: {fileID: -1487815893, guid: 9e89ad79f5c905c46b0cf1cef37788fe, type: 3}
+  hurt: {fileID: -540364982, guid: 9e89ad79f5c905c46b0cf1cef37788fe, type: 3}
+  dead: {fileID: 83710090, guid: 9e89ad79f5c905c46b0cf1cef37788fe, type: 3}
+  reenforce: {fileID: -1097550787, guid: 9e89ad79f5c905c46b0cf1cef37788fe, type: 3}
+  baseHitPoint: 2
+  daysToHeal: 1
+  resistance: 0
