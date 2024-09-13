@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Home
   layers:
   - Default
   - TransparentFX
@@ -38,11 +39,20 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Ground
+    uniqueID: 2546679573
+    locked: 0
+  - name: WallTop
+    uniqueID: 3352119011
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
   - name: Player
     uniqueID: 2364389507
+    locked: 0
+  - name: WallButton
+    uniqueID: 1759401263
     locked: 0
   - name: Interact
     uniqueID: 3543762619
