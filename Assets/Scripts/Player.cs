@@ -86,12 +86,14 @@ public class Player : MonoBehaviour
     {
         ChangePlayerCanActBool += SetActionBool;
         DaySystem.OnDayStart += OnNewDay;
+        StageSystem.OnReset += ResetState;
     }
 
     private void OnDisable()
     {
         ChangePlayerCanActBool -= SetActionBool;
         DaySystem.OnDayStart -= OnNewDay;
+        StageSystem.OnReset -= ResetState;
     }
 
     void SetActionBool(bool _value)
@@ -199,6 +201,7 @@ public class Player : MonoBehaviour
                 }
                 else
                     _selectedInteractable.Interact(this);
+                
             }
             else
                 _selectedInteractable.Interact(this);
@@ -208,7 +211,15 @@ public class Player : MonoBehaviour
 
     public void SetItem(ItemData _item)
     {
-        heldItem = _item;
+        if (heldItem)
+        {
+            if (_item == null)
+            {
+                heldItem = _item;
+            }
+        }
+        else
+            heldItem = _item;
     }
 
     public void DrainStamina(float _amount)
@@ -241,5 +252,12 @@ public class Player : MonoBehaviour
             stamina = baseStamina;
 
         _InputVector2 = Vector2.zero;
+    }
+
+    void ResetState()
+    {
+        SetItem(null);
+        stamina_outted = false;
+        stamina = baseStamina;
     }
 }

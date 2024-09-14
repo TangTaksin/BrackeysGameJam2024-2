@@ -28,6 +28,11 @@ public class DaySystem : MonoBehaviour
         OnDayEnd -= TriggerNextDay;
     }
 
+    private void Start()
+    {
+        TriggerNextDay();
+    }
+
     private void Update()
     {
         UpdateTimer();
