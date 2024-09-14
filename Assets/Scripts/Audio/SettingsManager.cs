@@ -81,7 +81,7 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
-    private void OpenSettingsPanel()
+    public void OpenSettingsPanel()
     {
         settingPanel.SetActive(true);
         _animator.enabled = true;
@@ -89,7 +89,7 @@ public class SettingsManager : MonoBehaviour
         isPanelOpen = true;
     }
 
-    private void CloseSettingsPanel()
+    public void CloseSettingsPanel()
     {
         _animator.Play("Close_Setting_ui_anim");
         StartCoroutine(DeactivatePanelAfterAnimation());

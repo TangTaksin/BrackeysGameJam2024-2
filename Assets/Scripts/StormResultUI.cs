@@ -14,7 +14,7 @@ public class StormResultUI : MonoBehaviour
     public TextMeshProUGUI _prevented_tmpro, _damaged_tmpro, _died_tmpro, add_tmpro;
     public TextMeshProUGUI _button_tmpro;
 
-    bool suceeded ,failed, lastDay;
+    bool suceeded, failed, lastDay;
 
     private void OnEnable()
     {
@@ -33,12 +33,16 @@ public class StormResultUI : MonoBehaviour
         if (_panel.activeSelf)
         {
             if (suceeded)
-                GenericSceneLoader.TriggerLoadScene("ProtoEndScene");
+            {
+                AudioManager.Instance.PlayMusic(AudioManager.Instance.music_Bg);
+                AudioManager.Instance.PlayAmbient(AudioManager.Instance.ambient_Rain);
+                GenericSceneLoader.TriggerLoadScene("EndScene");
+            }
             else
                 Transition.CalledFadeIn?.Invoke();
 
             Transition.FadeInOver += HideResult;
-            
+
         }
     }
 
@@ -59,12 +63,15 @@ public class StormResultUI : MonoBehaviour
         if (!suceeded)
         {
             DaySystem.OnDayEnd?.Invoke();
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.morning_sfx);
+            AudioManager.Instance.PlayMusic(AudioManager.Instance.music_Bg);
+            AudioManager.Instance.PlayAmbient(AudioManager.Instance.ambient_Rain);
         }
     }
 
-    void OnLastDay()
+    void OnLastDay(bool _bool)
     {
-        lastDay = true;
+        lastDay = _bool;
     }
 
     void UpdateResult()
@@ -93,6 +100,6 @@ public class StormResultUI : MonoBehaviour
             _button_tmpro.text = "retry from day 1";
         }
 
-        
+
     }
 }

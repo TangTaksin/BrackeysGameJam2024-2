@@ -16,7 +16,7 @@ public class Bed : Interactable
 
         if (waitingComfirm)
         {
-            countdown -=Time.deltaTime;
+            countdown -= Time.deltaTime;
 
             if (countdown <= 0)
                 waitingComfirm = false;
@@ -33,6 +33,9 @@ public class Bed : Interactable
         else
         {
             DaySystem.OnTimeOut?.Invoke();
+            AudioManager.Instance.StopMusicFadeOut();
+            AudioManager.Instance.StopAmbientFadeOut();
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.nightTime_sfx);
         }
     }
 }

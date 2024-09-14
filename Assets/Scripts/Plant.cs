@@ -136,7 +136,7 @@ public class Plant : Interactable, IDamagable
         }
     }
 
-    void ResetState()
+    void ResetState(bool _bool)
     {
         isDead = false;
         isProtected = false;
