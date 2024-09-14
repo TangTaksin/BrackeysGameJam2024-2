@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
 
     public float baseStamina;
     [Range(0,100)] public float StaminaOutPenelty = 50;
-    bool stamina_outted;
+    public bool stamina_penely;
 
     public delegate void OnObjectChangeDelegate(object newVal);
     public static OnObjectChangeDelegate OnInteractableChange;
@@ -229,7 +229,7 @@ public class Player : MonoBehaviour
         if (stamina <= 0)
         {
             stamina = 0;
-            stamina_outted = true;
+
         }
 
         if (stamina > baseStamina)
@@ -243,13 +243,14 @@ public class Player : MonoBehaviour
         if (player_starting_point)
             transform.position = player_starting_point.position;
 
-        if (stamina_outted)
+        if (stamina_penely)
         {
-            stamina_outted = false;
             stamina = baseStamina * (StaminaOutPenelty / 100);
         }
         else
             stamina = baseStamina;
+
+        stamina_penely = true;
 
         _InputVector2 = Vector2.zero;
     }
@@ -257,7 +258,6 @@ public class Player : MonoBehaviour
     void ResetState(bool _bool)
     {
         SetItem(null);
-        stamina_outted = false;
         stamina = baseStamina;
     }
 }

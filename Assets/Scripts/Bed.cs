@@ -33,6 +33,7 @@ public class Bed : Interactable
         else
         {
             DaySystem.OnTimeOut?.Invoke();
+            _player.stamina_penely = false;
         }
     }
 }
