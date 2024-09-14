@@ -56,10 +56,17 @@ public class DaySystem : MonoBehaviour
     {
         OnDayStart?.Invoke();
 
-        Player.ChangePlayerCanActBool?.Invoke(true);
-        
+        Transition.FadeOutOver += OnAfterFade;
+
         remainTime = prepareTime;
         isTicking = true;
+    }
+
+    void OnAfterFade()
+    {
+        Player.ChangePlayerCanActBool?.Invoke(true);
+
+        Transition.FadeOutOver -= OnAfterFade;
     }
 
     public void SetIsTicking(bool _value)

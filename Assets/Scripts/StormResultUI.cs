@@ -13,13 +13,19 @@ public class StormResultUI : MonoBehaviour
     public TextMeshProUGUI _overall_tmpro, _neededPerc_tmpro;
     public TextMeshProUGUI _prevented_tmpro, _damaged_tmpro, _died_tmpro, add_tmpro;
     public TextMeshProUGUI _button_tmpro;
+    public CanvasGroup _button_canvasG;
 
     bool suceeded ,failed, lastDay;
+    bool canPress;
+
+    public float canPressTime;
+    float timer;
 
     private void OnEnable()
     {
         StormSystem.OnStormEnd += BringUpResult;
         StageSystem.OnLastDay += OnLastDay;
+        
     }
 
     private void OnDisable()
@@ -28,9 +34,26 @@ public class StormResultUI : MonoBehaviour
         StageSystem.OnLastDay -= OnLastDay;
     }
 
+    private void Update()
+    {
+        if (!canPress)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                timer = 0;
+                canPress = true;
+            }
+            
+            _button_canvasG.alpha = 1 - (timer / canPressTime);
+        }
+
+        
+    }
+
     public void OnConfirm()
     {
-        if (_panel.activeSelf)
+        if (_panel.activeSelf && canPress)
         {
             if (suceeded)
                 GenericSceneLoader.TriggerLoadScene("ProtoEndScene");
@@ -38,12 +61,14 @@ public class StormResultUI : MonoBehaviour
                 Transition.CalledFadeIn?.Invoke();
 
             Transition.FadeInOver += HideResult;
-            
         }
     }
 
     void BringUpResult()
     {
+        timer = canPressTime;
+        canPress = false;
+
         failed = _plantgroup.CheckFailStatus();
         suceeded = (lastDay && !failed);
 

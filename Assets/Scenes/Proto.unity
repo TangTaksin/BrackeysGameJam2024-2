@@ -346,6 +346,7 @@ GameObject:
   - component: {fileID: 72428432}
   - component: {fileID: 72428431}
   - component: {fileID: 72428430}
+  - component: {fileID: 72428433}
   m_Layer: 5
   m_Name: E
   m_TagString: Untagged
@@ -467,6 +468,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72428428}
   m_CullTransparentMesh: 1
+--- !u!225 &72428433
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72428428}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &95165385
 GameObject:
   m_ObjectHideFlags: 0
@@ -5305,6 +5318,8 @@ MonoBehaviour:
   _died_tmpro: {fileID: 626783139}
   add_tmpro: {fileID: 103418496}
   _button_tmpro: {fileID: 738062312}
+  _button_canvasG: {fileID: 72428433}
+  canPressTime: 1.5
 --- !u!1 &1210368986
 GameObject:
   m_ObjectHideFlags: 0
@@ -5554,8 +5569,6 @@ MonoBehaviour:
   - {fileID: 880575035}
   - {fileID: 154096835}
   - {fileID: 335217759}
-  elementPool: 
-  ele_percent: 
   Wind: {fileID: 21300000, guid: f9a155784830a5447999380c888cfc27, type: 3}
   Rain: {fileID: 21300000, guid: 42d6045291c2b6143b9b1678f020c35f, type: 3}
   Hail: {fileID: 21300000, guid: b420183e171cf3341859260c2e202151, type: 3}
