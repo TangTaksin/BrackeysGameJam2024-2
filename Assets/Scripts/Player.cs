@@ -6,10 +6,8 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     Rigidbody2D _body;
-    Animator _animator;
 
     public Transform player_starting_point;
-    Vector2 _lastMoveDirection = Vector2.down;
 
     bool _canAct;
 
@@ -20,11 +18,11 @@ public class Player : MonoBehaviour
     float stamina
     {
         get { return _stamina; }
-        set
+        set 
         {
             if (_stamina == value) return;
 
-            _stamina = value;
+                _stamina = value;
 
             if (OnStaminaChange != null)
                 OnStaminaChange?.Invoke(_stamina, baseStamina);
@@ -32,8 +30,8 @@ public class Player : MonoBehaviour
     }
 
     public float baseStamina;
-    [Range(0, 100)] public float StaminaOutPenelty = 50;
-    bool stamina_outted;
+    [Range(0,100)] public float StaminaOutPenelty = 50;
+    public bool stamina_penely;
 
     public delegate void OnObjectChangeDelegate(object newVal);
     public static OnObjectChangeDelegate OnInteractableChange;
@@ -66,8 +64,7 @@ public class Player : MonoBehaviour
     public ItemData heldItem
     {
         get { return _heldItem; }
-        set
-        {
+        set {
             if (_heldItem == value) return;
 
             _heldItem = value;
@@ -82,8 +79,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        _body = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
+        _body = GetComponent<Rigidbody2D>();    
     }
 
     private void OnEnable()
@@ -114,27 +110,8 @@ public class Player : MonoBehaviour
 
     private void UpdateMovement()
     {
-        _movementSpeed = baseWalkSpeed;
+       _movementSpeed = baseWalkSpeed;
         _body.position += _InputVector2 * _movementSpeed * Time.deltaTime;
-
-        // Update animation parameters for movement and idle
-        if (_InputVector2 != Vector2.zero)
-        {
-            _animator.SetFloat("Horizontal", _InputVector2.x);
-            _animator.SetFloat("Vertical", _InputVector2.y);
-            _animator.SetFloat("Speed", _InputVector2.sqrMagnitude);
-            AudioManager.Instance.PlayWalkingSFX();
-
-            // Update the last direction when moving
-            _lastMoveDirection = _InputVector2.normalized;
-        }
-        else
-        {
-            // Player is idle, use the last movement direction
-            _animator.SetFloat("Horizontal", _lastMoveDirection.x);
-            _animator.SetFloat("Vertical", _lastMoveDirection.y);
-            _animator.SetFloat("Speed", 0);  // Set Speed to 0 to trigger idle
-        }
     }
 
     public void OnMove(InputValue _value)
@@ -224,7 +201,7 @@ public class Player : MonoBehaviour
                 }
                 else
                     _selectedInteractable.Interact(this);
-
+                
             }
             else
                 _selectedInteractable.Interact(this);
@@ -240,16 +217,9 @@ public class Player : MonoBehaviour
             {
                 heldItem = _item;
             }
-            else
-            {
-                AudioManager.Instance.PlaySFX(AudioManager.Instance.pickUpWrong_sfx);
-            }
         }
         else
-        {
             heldItem = _item;
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.pickUp_sfx);
-        }
     }
 
     public void DrainStamina(float _amount)
@@ -259,7 +229,7 @@ public class Player : MonoBehaviour
         if (stamina <= 0)
         {
             stamina = 0;
-            stamina_outted = true;
+
         }
 
         if (stamina > baseStamina)
@@ -273,13 +243,14 @@ public class Player : MonoBehaviour
         if (player_starting_point)
             transform.position = player_starting_point.position;
 
-        if (stamina_outted)
+        if (stamina_penely)
         {
-            stamina_outted = false;
             stamina = baseStamina * (StaminaOutPenelty / 100);
         }
         else
             stamina = baseStamina;
+
+        stamina_penely = true;
 
         _InputVector2 = Vector2.zero;
     }
@@ -287,7 +258,6 @@ public class Player : MonoBehaviour
     void ResetState(bool _bool)
     {
         SetItem(null);
-        stamina_outted = false;
         stamina = baseStamina;
     }
 }

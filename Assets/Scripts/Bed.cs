@@ -36,6 +36,7 @@ public class Bed : Interactable
             AudioManager.Instance.StopMusicFadeOut();
             AudioManager.Instance.StopAmbientFadeOut();
             AudioManager.Instance.PlaySFX(AudioManager.Instance.nightTime_sfx);
+            _player.stamina_penely = false;
         }
     }
 }

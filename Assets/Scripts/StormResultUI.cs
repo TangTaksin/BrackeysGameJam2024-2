@@ -13,13 +13,19 @@ public class StormResultUI : MonoBehaviour
     public TextMeshProUGUI _overall_tmpro, _neededPerc_tmpro;
     public TextMeshProUGUI _prevented_tmpro, _damaged_tmpro, _died_tmpro, add_tmpro;
     public TextMeshProUGUI _button_tmpro;
+    public CanvasGroup _button_canvasG;
 
-    bool suceeded, failed, lastDay;
+    bool suceeded ,failed, lastDay;
+    bool canPress;
+
+    public float canPressTime;
+    float timer;
 
     private void OnEnable()
     {
         StormSystem.OnStormEnd += BringUpResult;
         StageSystem.OnLastDay += OnLastDay;
+        
     }
 
     private void OnDisable()
@@ -28,26 +34,41 @@ public class StormResultUI : MonoBehaviour
         StageSystem.OnLastDay -= OnLastDay;
     }
 
+    private void Update()
+    {
+        if (!canPress)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                timer = 0;
+                canPress = true;
+            }
+            
+            _button_canvasG.alpha = 1 - (timer / canPressTime);
+        }
+
+        
+    }
+
     public void OnConfirm()
     {
-        if (_panel.activeSelf)
+        if (_panel.activeSelf && canPress)
         {
             if (suceeded)
-            {
-                AudioManager.Instance.PlayMusic(AudioManager.Instance.music_Bg);
-                AudioManager.Instance.PlayAmbient(AudioManager.Instance.ambient_Rain);
-                GenericSceneLoader.TriggerLoadScene("EndScene");
-            }
+                GenericSceneLoader.TriggerLoadScene("ProtoEndScene");
             else
                 Transition.CalledFadeIn?.Invoke();
 
             Transition.FadeInOver += HideResult;
-
         }
     }
 
     void BringUpResult()
     {
+        timer = canPressTime;
+        canPress = false;
+
         failed = _plantgroup.CheckFailStatus();
         suceeded = (lastDay && !failed);
 
@@ -63,9 +84,6 @@ public class StormResultUI : MonoBehaviour
         if (!suceeded)
         {
             DaySystem.OnDayEnd?.Invoke();
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.morning_sfx);
-            AudioManager.Instance.PlayMusic(AudioManager.Instance.music_Bg);
-            AudioManager.Instance.PlayAmbient(AudioManager.Instance.ambient_Rain);
         }
     }
 
@@ -100,6 +118,6 @@ public class StormResultUI : MonoBehaviour
             _button_tmpro.text = "retry from day 1";
         }
 
-
+        
     }
 }
