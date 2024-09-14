@@ -5,7 +5,6 @@ using UnityEngine;
 public class Bed : Interactable
 {
     bool waitingComfirm;
-    bool confirmed;
 
     public GameObject confirmPrompt;
     public float confirmTime = 1f;
@@ -26,15 +25,6 @@ public class Bed : Interactable
 
     public override void Interact(Player _player)
     {
-        if (confirmed)
-        {
-            DaySystem.OnTimeOut?.Invoke();
-            AudioManager.Instance.StopMusicFadeOut();
-            AudioManager.Instance.StopAmbientFadeOut();
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.nightTime_sfx);
-
-        }
-
         if (!waitingComfirm)
         {
             waitingComfirm = true;
@@ -42,7 +32,7 @@ public class Bed : Interactable
         }
         else
         {
-            confirmed = true;
+            DaySystem.OnTimeOut?.Invoke();
         }
     }
 }

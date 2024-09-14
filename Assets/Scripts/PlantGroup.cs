@@ -6,6 +6,10 @@ public class PlantGroup : MonoBehaviour
 {
     public Plant[] plantGroup;
 
+    [Range(0,100)] public float FailThreshold;
+    bool _failed;
+
+
     float _baseIntegrity;
     float _integrity;
 
@@ -29,14 +33,17 @@ public class PlantGroup : MonoBehaviour
 
     public void GetDefaultIntegrity()
     {
+        _baseIntegrity = 0;
         foreach (var plant in plantGroup)
         {
             _baseIntegrity += plant.plantdata.baseHitPoint;
         }
     }
 
+
     public void CheckOverallIntegrity()
     {
+        _integrity = 0;
         foreach (var plant in plantGroup)
         {
             _integrity += plant.hitPoints;
@@ -51,13 +58,23 @@ public class PlantGroup : MonoBehaviour
 
     public float GetOveallStatus()
     {
+        UpdateOverall();
         return _integrity / _baseIntegrity;
     }
 
-    void DamageCheck(int _takenDamage, bool _resisted, bool _proteted, bool _died)
+    public bool CheckFailStatus()
+    {
+        var status = GetOveallStatus();
+        return _failed = (status * 100 < FailThreshold);
+    }
+
+    void DamageCheck(Plant _plant,int _takenDamage, bool _resisted, bool _proteted, bool _died, bool _attacked)
     {
         if (_takenDamage > 0)
             _damagedCount++;
+
+        if (_attacked)
+            _damagedCount--;
 
         if (_proteted)
             _PreventedCount++;
@@ -65,7 +82,6 @@ public class PlantGroup : MonoBehaviour
         if (_died)
         {
             _deadCount++;
-            _damagedCount--;
         }
     }
 

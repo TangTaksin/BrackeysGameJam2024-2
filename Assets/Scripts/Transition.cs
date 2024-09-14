@@ -12,7 +12,7 @@ public class Transition : MonoBehaviour
     public static TransitionEvent FadeInOver, FadeOutOver;
 
 
-    private void Start()
+    private void Awake()
     {
         _animator = GetComponent<Animator>();
     }
@@ -24,7 +24,7 @@ public class Transition : MonoBehaviour
 
     private void OnDisable()
     {
-        CalledFadeIn += PlayFadeOut;
+        CalledFadeIn -= PlayFadeIn;
     }
 
 
