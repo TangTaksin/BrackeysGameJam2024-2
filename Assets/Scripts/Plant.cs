@@ -9,6 +9,7 @@ public class Plant : Interactable, IDamagable
     SpriteRenderer plantImg;
 
     public int hitPoints;
+    int regenCounter;
 
     public bool isDead;
     public bool isDamagable
@@ -33,6 +34,16 @@ public class Plant : Interactable, IDamagable
         SpriteUpdate();
     }
 
+    private void OnEnable()
+    {
+        DaySystem.OnDayStart += OnNewDay;
+    }
+
+    private void OnDisable()
+    {
+        DaySystem.OnDayStart -= OnNewDay;
+    }
+
     public override void Interact(Player _player)
     {
         
@@ -52,7 +63,7 @@ public class Plant : Interactable, IDamagable
         if (hitPoints <= 0)
         {
             isDead = true;
-            
+            isInteractable = false;
         }
 
         SpriteUpdate();
@@ -65,6 +76,9 @@ public class Plant : Interactable, IDamagable
             return;
 
         hitPoints += amount;
+
+        if (hitPoints > plantdata.baseHitPoint)
+            hitPoints = plantdata.baseHitPoint;
 
         SpriteUpdate();
     }
@@ -89,5 +103,21 @@ public class Plant : Interactable, IDamagable
     {
         isProtected = _value;
         SpriteUpdate();
+    }
+
+    void OnNewDay()
+    {
+        SetProtected(false);
+        RegenCheck();
+    }
+
+    void RegenCheck()
+    {
+        regenCounter++;
+        if (regenCounter >= plantdata.daysToHeal)
+        {
+            RecoverHealth(1);
+            regenCounter = 0;
+        }
     }
 }

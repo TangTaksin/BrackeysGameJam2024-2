@@ -17,12 +17,14 @@ public class PlantGroup : MonoBehaviour
     {
         StormSystem.OnStormEnd += UpdateOverall;
         Plant.OnDamage += DamageCheck;
+        DaySystem.OnDayStart += ResetStatistic;
     }
 
     private void OnDisable()
     {
-        StormSystem.OnStormEnd += UpdateOverall;
-        Plant.OnDamage += DamageCheck;
+        StormSystem.OnStormEnd -= UpdateOverall;
+        Plant.OnDamage -= DamageCheck;
+        DaySystem.OnDayStart -= ResetStatistic;
     }
 
     public void GetDefaultIntegrity()
@@ -61,8 +63,17 @@ public class PlantGroup : MonoBehaviour
             _PreventedCount++;
 
         if (_died)
+        {
             _deadCount++;
+            _damagedCount--;
+        }
     }
 
-    
+    void ResetStatistic()
+    {
+        _damagedCount = 0;
+        _PreventedCount = 0;
+        _deadCount = 0;
+    }
+
 }

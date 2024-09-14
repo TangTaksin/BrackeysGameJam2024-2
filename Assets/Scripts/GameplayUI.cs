@@ -7,6 +7,8 @@ public class GameplayUI : MonoBehaviour
 {
     Camera _cam;
 
+    public Image itemImg;
+    public Image stamina_fill;
     public Image targetImg;
     Interactable _targetTransform;
 
@@ -18,12 +20,16 @@ public class GameplayUI : MonoBehaviour
 
     private void OnEnable()
     {
-        Player.OnVariableChange += SetTargetTransform;
+        Player.OnInteractableChange += SetTargetTransform;
+        Player.OnItemChange += UpdateItem;
+        Player.OnStaminaChange += UpdateStamina;
     }
 
     private void OnDisable()
     {
-        Player.OnVariableChange += SetTargetTransform;
+        Player.OnInteractableChange -= SetTargetTransform;
+        Player.OnItemChange -= UpdateItem;
+        Player.OnStaminaChange -= UpdateStamina;
     }
 
     private void Update()
@@ -31,10 +37,9 @@ public class GameplayUI : MonoBehaviour
         UpdateTargetImg();
     }
 
-    private void SetTargetTransform(Interactable _in)
+    private void SetTargetTransform(object _in)
     {
-        print(_in);
-        _targetTransform = _in;
+        _targetTransform = _in as Interactable;
         
         if (targetImg)
             targetImg.gameObject.SetActive(_targetTransform != null);
@@ -44,5 +49,26 @@ public class GameplayUI : MonoBehaviour
     {
         if (_targetTransform != null)
         targetImg.transform.position = _cam.WorldToScreenPoint(_targetTransform.transform.position);
+    }
+
+    void UpdateStamina(float _stamina, float _baseSta)
+    {
+        if (!stamina_fill)
+            return;
+
+        var stam_perc = _stamina / _baseSta;
+        stamina_fill.fillAmount = stam_perc;
+    }
+
+    void UpdateItem(object _item)
+    {
+        if (!itemImg)
+            return;
+
+        var _itemData = _item as ItemData;
+        itemImg.gameObject.SetActive(_itemData != null);
+
+        if (_itemData)
+        itemImg.sprite = _itemData.item_icon;
     }
 }

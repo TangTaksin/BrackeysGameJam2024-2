@@ -5,8 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Item Data", menuName = "Item Data/Plant Protection")]
 public class ItemPlantProtection : ItemData
 {
-    public string targetedPlantName;
-
     public override bool UseItem(Interactable interactable)
     {
         var plant = interactable as Plant;
