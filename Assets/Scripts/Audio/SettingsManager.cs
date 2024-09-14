@@ -28,12 +28,6 @@ public class SettingsManager : MonoBehaviour
 
     private void Update()
     {
-        // Restart level when 'R' is pressed
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            RestartLevel();
-        }
-
         // Toggle settings panel when 'P' is pressed
         if (Input.GetKeyDown(KeyCode.P))
         {

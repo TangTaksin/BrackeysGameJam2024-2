@@ -19,11 +19,11 @@ public class Player : MonoBehaviour
     float stamina
     {
         get { return _stamina; }
-        set 
+        set
         {
             if (_stamina == value) return;
 
-                _stamina = value;
+            _stamina = value;
 
             if (OnStaminaChange != null)
                 OnStaminaChange?.Invoke(_stamina, baseStamina);
@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
     }
 
     public float baseStamina;
-    [Range(0,100)] public float StaminaOutPenelty = 50;
+    [Range(0, 100)] public float StaminaOutPenelty = 50;
     bool stamina_outted;
 
     public delegate void OnObjectChangeDelegate(object newVal);
@@ -65,7 +65,8 @@ public class Player : MonoBehaviour
     public ItemData heldItem
     {
         get { return _heldItem; }
-        set {
+        set
+        {
             if (_heldItem == value) return;
 
             _heldItem = value;
@@ -114,16 +115,18 @@ public class Player : MonoBehaviour
         _movementSpeed = baseWalkSpeed;
         _body.position += _InputVector2 * _movementSpeed * Time.deltaTime;
 
-        // // Update animation parameters for movement and idle
-        // if (_InputVector2 != Vector2.zero)
-        // {
-        //     _animator.SetFloat("Horizontal", _InputVector2.x);
-        //     _animator.SetFloat("Vertical", _InputVector2.y);
-        //     _animator.SetFloat("Speed", _InputVector2.sqrMagnitude);
 
-        //     // Update the last direction when moving
-        //     _lastMoveDirection = _InputVector2.normalized;
-        // }
+        // Update animation parameters for movement and idle
+        if (_InputVector2 != Vector2.zero)
+        {
+            // _animator.SetFloat("Horizontal", _InputVector2.x);
+            // _animator.SetFloat("Vertical", _InputVector2.y);
+            // _animator.SetFloat("Speed", _InputVector2.sqrMagnitude);
+            AudioManager.Instance.PlayWalkingSFX();
+
+            // Update the last direction when moving
+            // _lastMoveDirection = _InputVector2.normalized;
+        }
         // else
         // {
         //     // Player is idle, use the last movement direction
@@ -221,6 +224,7 @@ public class Player : MonoBehaviour
                 {
                     DrainStamina(_heldItem.cost);
                     SetItem(null);
+                    AudioManager.Instance.PlaySFX(AudioManager.Instance.useItem_sfx);
                 }
                 else
                     _selectedInteractable.Interact(this);
@@ -233,7 +237,22 @@ public class Player : MonoBehaviour
 
     public void SetItem(ItemData _item)
     {
-        heldItem = _item;
+        if (heldItem)
+        {
+            if (_item == null)
+            {
+                heldItem = _item;
+            }
+            else
+            {
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.pickUpWrong_sfx);
+            }
+        }
+        else
+        {
+            heldItem = _item;
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.pickUp_sfx);
+        }
     }
 
     public void DrainStamina(float _amount)

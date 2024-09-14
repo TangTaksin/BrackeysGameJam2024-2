@@ -29,6 +29,9 @@ public class StormResultUI : MonoBehaviour
         {
             Transition.CalledFadeIn?.Invoke();
             Transition.FadeInOver += HideResult;
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.morning_sfx);
+            AudioManager.Instance.PlayMusic(AudioManager.Instance.music_Bg);
+            AudioManager.Instance.PlayAmbient(AudioManager.Instance.ambient_Rain);
         }
     }
 

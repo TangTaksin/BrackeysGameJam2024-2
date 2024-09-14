@@ -29,6 +29,10 @@ public class Bed : Interactable
         if (confirmed)
         {
             DaySystem.OnTimeOut?.Invoke();
+            AudioManager.Instance.StopMusicFadeOut();
+            AudioManager.Instance.StopAmbientFadeOut();
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.nightTime_sfx);
+
         }
 
         if (!waitingComfirm)
