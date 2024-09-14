@@ -14,8 +14,19 @@ public class TransparentHome : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+        if (spriteMask != null && collision.CompareTag("Home"))
+        {
+            spriteMask.enabled = true;
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.openDoor_sfx);
+        }
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
+        
         if (spriteMask != null && collision.CompareTag("Home"))
         {
             spriteMask.enabled = true;
@@ -26,6 +37,7 @@ public class TransparentHome : MonoBehaviour
     {
         if (spriteMask != null && collision.CompareTag("Home"))
         {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.closeDoor_sfx);
             spriteMask.enabled = false;
         }
     }

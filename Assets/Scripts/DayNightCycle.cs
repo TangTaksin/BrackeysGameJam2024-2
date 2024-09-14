@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class DayNightCycle : MonoBehaviour
 {
@@ -51,29 +52,27 @@ public class DayNightCycle : MonoBehaviour
         playerSpotlight.enabled = false;
         globalLight.intensity = .7f;
 
-        if (daySystem != null)
-        {
-            DaySystem.OnDayStart += RestartCycle;
-            DaySystem.OnTimeOut += StopCycle;
-            DaySystem.OnPrepareEnd += StartCycle;
-        }
+        // Subscribe to DaySystem events
+        DaySystem.OnDayStart += StartCycle;
+        DaySystem.OnDayEnd += StopCycle;
+        DaySystem.OnTimeOut += TriggerTimeOver;
+        DaySystem.OnPrepareEnd += TriggerNextDay;
     }
 
-    private void OnDisable()
+    void OnDestroy()
     {
-        if (daySystem != null)
-        {
-            DaySystem.OnDayStart -= RestartCycle;
-            DaySystem.OnTimeOut -= StopCycle;
-            DaySystem.OnPrepareEnd -= StartCycle;
-        }
+        // Unsubscribe to prevent memory leaks
+        DaySystem.OnDayStart -= StartCycle;
+        DaySystem.OnDayEnd -= StopCycle;
+        DaySystem.OnTimeOut -= TriggerTimeOver;
+        DaySystem.OnPrepareEnd -= TriggerNextDay;
     }
 
     void Update()
     {
         if (isCycleStopped)
         {
-            return; // Skip update if the cycle is stopped
+            return;
         }
 
         timer += Time.deltaTime * timeScale;
@@ -92,8 +91,10 @@ public class DayNightCycle : MonoBehaviour
         {
             isCycleStopped = true;
             timer = totalCycleDuration;
-            DaySystem.OnDayEnd?.Invoke();
+
+            // Trigger DaySystem events when the cycle ends
             DaySystem.OnTimeOut?.Invoke();
+            DaySystem.OnDayEnd?.Invoke();
         }
     }
 
@@ -142,18 +143,37 @@ public class DayNightCycle : MonoBehaviour
 
     public void RestartCycle()
     {
+        Player.ChangePlayerCanActBool?.Invoke(true);
         isCycleStopped = false;
         timer = 0f;
-        Player.ChangePlayerCanActBool?.Invoke(true);
     }
 
     public void StartCycle()
     {
+        // Start the day-night cycle
         isCycleStopped = false;
+        timer = 0f;
+        Debug.Log("Day Started: Restarting Day-Night Cycle");
     }
 
     public void StopCycle()
     {
+        // Stop the day-night cycle
         isCycleStopped = true;
+        Debug.Log("Day Ended: Stopping Day-Night Cycle");
+    }
+
+    public void TriggerTimeOver()
+    {
+        // Stop the cycle immediately when time runs out
+        isCycleStopped = true;
+        Debug.Log("Time Over: Stopping Day-Night Cycle");
+    }
+
+    public void TriggerNextDay()
+    {
+        // Restart the cycle when the next day starts
+        RestartCycle();
+        Debug.Log("Preparing for the Next Day: Restarting Cycle");
     }
 }

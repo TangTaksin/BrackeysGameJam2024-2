@@ -18,4 +18,4 @@ MonoBehaviour:
   reenforce: {fileID: -1097550787, guid: 9e89ad79f5c905c46b0cf1cef37788fe, type: 3}
   baseHitPoint: 2
   daysToHeal: 1
-  resistance: 0
+  resistance: 1
