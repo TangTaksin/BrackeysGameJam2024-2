@@ -27,7 +27,7 @@ public class StageSystem : MonoBehaviour
 
     public TextMeshProUGUI dayTMP;
 
-    public delegate void StageEvent();
+    public delegate void StageEvent(bool _bool);
     public static StageEvent OnReset;
     public static StageEvent OnLastDay;
 
@@ -54,16 +54,13 @@ public class StageSystem : MonoBehaviour
         }
 
         var lastDay = DayCheck();
-        if (lastDay)
-        {
-            OnLastDay?.Invoke();
-        }
+        OnLastDay?.Invoke(lastDay);
     }
 
     void RestartProgress()
     {
         day = 1;
-        OnReset?.Invoke();
+        OnReset?.Invoke(true);
     }
 
     bool DayCheck()

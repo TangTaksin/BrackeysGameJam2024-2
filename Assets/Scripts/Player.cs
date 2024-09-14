@@ -254,7 +254,7 @@ public class Player : MonoBehaviour
         _InputVector2 = Vector2.zero;
     }
 
-    void ResetState()
+    void ResetState(bool _bool)
     {
         SetItem(null);
         stamina_outted = false;

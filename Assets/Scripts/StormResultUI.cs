@@ -62,9 +62,9 @@ public class StormResultUI : MonoBehaviour
         }
     }
 
-    void OnLastDay()
+    void OnLastDay(bool _bool)
     {
-        lastDay = true;
+        lastDay = _bool;
     }
 
     void UpdateResult()
