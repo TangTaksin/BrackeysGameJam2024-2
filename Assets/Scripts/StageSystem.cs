@@ -7,6 +7,8 @@ public class StageSystem : MonoBehaviour
 {
     public PlantGroup plantGroup;
 
+    public TextMeshProUGUI dayTMP;
+    
     public int DayLimit = 3;
     int _day = 1;
     public int day
@@ -41,16 +43,15 @@ public class StageSystem : MonoBehaviour
         DaySystem.OnDayStart -= OnDayStart;
     }
 
-    void OnDayEnd()
+    private void InitializeDay()
     {
-        currentDay = 1;
-        UpdateDayText();
+        day = 1;
     }
 
     public void OnDayStart()
     {
         if (failed)
-            ResetProgress();
+            RestartProgress();
     }
 
     public (bool, bool) HandleDayEnd()
@@ -66,11 +67,20 @@ public class StageSystem : MonoBehaviour
         return (failed, isLastDay);
     }
 
+    private bool TryAdvanceDay()
+    {
+        if (day < DayLimit)
+        {
+            day++;
+            return false; // Not the last day
+        }
+        return true; // It's the last day
+    }
+
     void RestartProgress()
     {
         failed = false;
-        currentDay = 1; // Reset to day 1
-        UpdateDayText();
+        day = 1; // Reset to day 1
         OnReset?.Invoke(true);
     }
 
