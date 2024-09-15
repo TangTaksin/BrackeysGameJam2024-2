@@ -13,19 +13,20 @@ public class StageSystem : MonoBehaviour
 
     private int currentDay;
 
+    bool failed;
+
     public delegate void StageEvent(bool isLastDay);
     public static event StageEvent OnReset;
-    public static event StageEvent OnLastDay;
 
     private void OnEnable()
     {
-        DaySystem.OnDayEnd += HandleDayEnd;
+        DaySystem.OnDayStart += OnDayStart;
         InitializeDay();
     }
 
     private void OnDisable()
     {
-        DaySystem.OnDayEnd -= HandleDayEnd;
+        DaySystem.OnDayStart -= OnDayStart;
     }
 
     private void InitializeDay()
@@ -34,31 +35,28 @@ public class StageSystem : MonoBehaviour
         UpdateDayText();
     }
 
-    private void HandleDayEnd()
+    public void OnDayStart()
     {
-        bool failed = plantGroup.CheckFailStatus();
-
         if (failed)
-        {
-            ResetProgress(); // Reset to day 1 if failed
-        }
-        else
-        {
-            bool isLastDay = TryAdvanceDay();
+            ResetProgress();
+    }
 
-            if (isLastDay)
-            {
-                LoadEndScene(); 
-            }
-            else
-            {
-                OnLastDay?.Invoke(isLastDay);
-            }
+    public (bool, bool) HandleDayEnd()
+    {
+        failed = plantGroup.CheckFailStatus();
+        bool isLastDay = false;
+
+        if (!failed)
+        {
+            isLastDay = TryAdvanceDay();
         }
+
+        return (failed, isLastDay);
     }
 
     private void ResetProgress()
     {
+        failed = false;
         currentDay = 1; // Reset to day 1
         UpdateDayText();
         OnReset?.Invoke(true);

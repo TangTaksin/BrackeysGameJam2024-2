@@ -8,6 +8,7 @@ using TMPro;
 public class StormResultUI : MonoBehaviour
 {
     public PlantGroup _plantgroup;
+    public StageSystem _stageSystem;
     public GameObject _panel;
     public Image _overall_fill;
     public TextMeshProUGUI _overall_tmpro, _neededPerc_tmpro;
@@ -24,14 +25,12 @@ public class StormResultUI : MonoBehaviour
     private void OnEnable()
     {
         StormSystem.OnStormEnd += BringUpResult;
-        StageSystem.OnLastDay += OnLastDay;
         
     }
 
     private void OnDisable()
     {
         StormSystem.OnStormEnd -= BringUpResult;
-        StageSystem.OnLastDay -= OnLastDay;
     }
 
     private void Update()
@@ -69,7 +68,11 @@ public class StormResultUI : MonoBehaviour
         timer = canPressTime;
         canPress = false;
 
-        failed = _plantgroup.CheckFailStatus();
+        var _item = _stageSystem.HandleDayEnd();
+
+        suceeded = _item.Item2;
+        failed = _item.Item1;
+
         suceeded = (lastDay && !failed);
 
         _panel.SetActive(true);

@@ -74,7 +74,7 @@ public class PlantGroup : MonoBehaviour
         }
 
         var status = GetOverallStatus();
-        Debug.Log($"CheckFailStatus - Status: {status}, Fail Threshold: {FailThreshold}, Failed: {status < FailThreshold}");
+        Debug.Log($"CheckFailStatus - Status: {status * 100}, Fail Threshold: {FailThreshold}, Failed: {status * 100 < FailThreshold}");
 
         // Compare the status directly with the FailThreshold
         _failed = (status * 100 < FailThreshold);
