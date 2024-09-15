@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public Transform player_starting_point;
 
     bool _canAct;
+    public bool _holdingButton;
 
     float _movementSpeed;
     public float baseWalkSpeed;
@@ -178,10 +179,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void OnInteract()
+    public void OnInteract(InputValue value)
     {
         if (!_canAct)
             return;
+
+        _holdingButton = value.isPressed;
 
         if (_selectedInteractable != null)
         {

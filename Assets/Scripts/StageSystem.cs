@@ -8,7 +8,7 @@ public class StageSystem : MonoBehaviour
     public PlantGroup plantGroup;
 
     public int DayLimit = 3;
-    static int _day = 1;
+    int _day = 1;
     public int day
     {
         get { return _day; }
