@@ -16,18 +16,20 @@ public class TransparentHome : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
-        if (spriteMask != null && collision.CompareTag("Home"))
+        if (spriteMask == null) return;
+
+        if (collision.CompareTag("Home"))
         {
             spriteMask.enabled = true;
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.openDoor_sfx);
+            PlaySFX(AudioManager.Instance?.openDoor_sfx);
         }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        
-        if (spriteMask != null && collision.CompareTag("Home"))
+        if (spriteMask == null) return;
+
+        if (collision.CompareTag("Home"))
         {
             spriteMask.enabled = true;
         }
@@ -35,10 +37,28 @@ public class TransparentHome : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (spriteMask != null && collision.CompareTag("Home"))
+        if (spriteMask == null) return;
+
+        if (collision.CompareTag("Home"))
         {
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.closeDoor_sfx);
+            PlaySFX(AudioManager.Instance?.closeDoor_sfx);
             spriteMask.enabled = false;
+        }
+    }
+
+    private void PlaySFX(AudioClip clip)
+    {
+        if (clip != null && AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(clip);
+        }
+        else if (clip == null)
+        {
+            Debug.LogWarning("Audio clip is missing.");
+        }
+        else
+        {
+            Debug.LogWarning("AudioManager instance is missing.");
         }
     }
 }

@@ -130,6 +130,7 @@ public class DayNightCycle : MonoBehaviour
 
     public void StartCycle()
     {
+        Player.ChangePlayerCanActBool?.Invoke(true);
         isCycleStopped = false;
         timer = 0f;
         Debug.Log("Day-Night Cycle Started.");

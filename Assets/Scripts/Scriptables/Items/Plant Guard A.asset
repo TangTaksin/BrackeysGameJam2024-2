@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Plant Guard A
   m_EditorClassIdentifier: 
   item_icon: {fileID: -753854142, guid: 635a2648d7710504ebc6ae21e9526aa0, type: 3}
-  cost: 1
+  cost: 8
   pickUpObject: {fileID: 4142180633494145328, guid: 7d6f7197085b4564c86523e1fc9c598a, type: 3}
