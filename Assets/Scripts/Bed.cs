@@ -12,6 +12,8 @@ public class Bed : Interactable
     public float progressTime = 1f;
     float progress;
 
+    Player _refPlayer;
+
     private void Update()
     {
         confirmPrompt.gameObject.SetActive(progress > 0);
@@ -27,6 +29,7 @@ public class Bed : Interactable
                 progress = 0;
                 holding = false;
                 DaySystem.OnTimeOut?.Invoke();
+                _refPlayer.stamina_penely = false;
             }
 
         }
@@ -40,6 +43,7 @@ public class Bed : Interactable
 
     public override void Interact(Player _player)
     {
+        _refPlayer = _player;
         holding = _player._holdingButton;
 
     }
