@@ -1,42 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Bed : Interactable
 {
-    bool waitingComfirm;
+    bool holding;
+    bool progressHit;
 
-    public GameObject confirmPrompt;
-    public float confirmTime = 1f;
-    float countdown;
+    public Image confirmPrompt;
+    public float progressTime = 1f;
+    float progress;
 
     private void Update()
     {
-        confirmPrompt.SetActive(waitingComfirm);
+        confirmPrompt.gameObject.SetActive(progress > 0);
+        confirmPrompt.fillAmount = progress / progressTime;
 
-        if (waitingComfirm)
+        if (holding)
         {
-            countdown -= Time.deltaTime;
+            progress += Time.deltaTime;
+            progressHit = (progress >= progressTime);
 
-            if (countdown <= 0)
-                waitingComfirm = false;
+            if (progressHit)
+            {
+                progress = 0;
+                holding = false;
+                DaySystem.OnTimeOut?.Invoke();
+            }
+
         }
+        else
+            progress -= Time.deltaTime;
+
+        if (progress <= 0)
+            progress = 0;
+
     }
 
     public override void Interact(Player _player)
     {
-        if (!waitingComfirm)
-        {
-            waitingComfirm = true;
-            countdown = confirmTime;
-        }
-        else
-        {
-            DaySystem.OnTimeOut?.Invoke();
-            AudioManager.Instance.StopMusicFadeOut();
-            AudioManager.Instance.StopAmbientFadeOut();
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.nightTime_sfx);
-            _player.stamina_penely = false;
-        }
+        holding = _player._holdingButton;
+
     }
 }
