@@ -10,10 +10,10 @@ public class DaySystem : MonoBehaviour
     bool isTicking;
 
     public delegate void DayEvent();
-    
-    public static DayEvent OnDayStart; 
-    public static DayEvent OnTimeOut; 
-    public static DayEvent OnPrepareEnd; 
+
+    public static DayEvent OnDayStart;
+    public static DayEvent OnTimeOut;
+    public static DayEvent OnPrepareEnd;
     public static DayEvent OnDayEnd;
 
     private void OnEnable()
@@ -86,6 +86,9 @@ public class DaySystem : MonoBehaviour
     {
         remainTime = 0;
         isTicking = false;
+        AudioManager.Instance.StopMusicFadeOut();
+        AudioManager.Instance.StopAmbientFadeOut();
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.nightTime_sfx);
 
         Player.ChangePlayerCanActBool?.Invoke(false);
         Transition.CalledFadeIn?.Invoke();

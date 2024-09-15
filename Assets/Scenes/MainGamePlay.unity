@@ -13341,6 +13341,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 884745803086581799, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 884745803086581799, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 884745803086581799, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 884745803086581799, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -75.67836
+      objectReference: {fileID: 0}
     - target: {fileID: 1066509192246542402, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -13370,6 +13386,38 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1855544875404760559, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3069414436563194307, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3069414436563194307, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3069414436563194307, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3069414436563194307, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3263205156200075414, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3263205156200075414, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3263205156200075414, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3263205156200075414, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
@@ -13405,6 +13453,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3474110585579329405, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3655475716916092264, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -13437,6 +13489,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4068405675588935440, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_text
+      value: 'White petals with a yellow center; similar to common daisies.
+
+
+        Resistance:
+        Rain Storm'
+      objectReference: {fileID: 0}
+    - target: {fileID: 4294453414994118370, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_text
+      value: 'White or pink petals with a yellow center; small and dainty.
+
+
+        Resistance:
+        Rain Storm'
+      objectReference: {fileID: 0}
     - target: {fileID: 4534797795683851093, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -13453,6 +13521,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4538793978882776193, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_text
+      value: 'Red petals; grows in water, often found in ponds.
+
+
+        Resistance:
+        Rain Storm'
+      objectReference: {fileID: 0}
     - target: {fileID: 4564806309428473724, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -13468,6 +13544,14 @@ PrefabInstance:
     - target: {fileID: 4564806309428473724, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4900370104004130665, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_text
+      value: 'Small, clustered blooms; available in many colors.
+
+
+        Resistance:
+        Hail Storm'
       objectReference: {fileID: 0}
     - target: {fileID: 5031406991278920448, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
       propertyPath: m_AnchorMax.y
@@ -13500,6 +13584,14 @@ PrefabInstance:
     - target: {fileID: 5233356111188077548, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5500245336096213949, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_text
+      value: 'Large, rounded clusters of small flowers; changes color based on soil
+        pH.
+
+
+        Resistance: Thunder Storm'
       objectReference: {fileID: 0}
     - target: {fileID: 5580842983878225320, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
       propertyPath: m_AnchorMax.y
@@ -13628,6 +13720,14 @@ PrefabInstance:
     - target: {fileID: 6676051738176168104, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7003296542490114554, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
+      propertyPath: m_text
+      value: 'Cup-shaped blooms; comes in various vibrant colors.
+
+
+        Resistance:
+        Wind Storm'
       objectReference: {fileID: 0}
     - target: {fileID: 7513789166622468376, guid: c90d76542fe61ad4eae2e8f9e7b0935b, type: 3}
       propertyPath: m_AnchorMax.y
