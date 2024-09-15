@@ -12,14 +12,14 @@ public class DayNightCycle : MonoBehaviour
     public float nightDuration = 20f;
     public float spotlightMaxIntensity = 1f;
     public TextMeshProUGUI clockText;
-    public Image timeFillImage;
+    public Image timeFillImage; // Reference to the Image component for fill amount
     public float timeScale = 1f;
+
+    public DaySystem daySystem; // Reference to the DaySystem component
 
     private float timer;
     private float totalCycleDuration;
     private bool isCycleStopped;
-
-    public DaySystem daySystem;
 
     void Start()
     {
@@ -28,78 +28,70 @@ public class DayNightCycle : MonoBehaviour
             globalLight = GetComponent<Light2D>();
         }
 
-        if (daySystem == null)
+        if (timeFillImage != null)
         {
-            Debug.LogError("DaySystem is not assigned!");
-        }
-        else
-        {
-            DaySystem.OnDayStart += StartCycle;
-            DaySystem.OnDayEnd += StopCycle;
-            DaySystem.OnTimeOut += TriggerTimeOver;
-            DaySystem.OnPrepareEnd += TriggerNextDay;
+            timeFillImage.fillAmount = 0f; // Start fill image at 0
         }
 
         timer = 0f;
         totalCycleDuration = dayDuration + nightDuration;
+
+        if (totalCycleDuration <= 0)
+        {
+            Debug.LogError("DayNightCycle: totalCycleDuration is zero or negative.");
+            totalCycleDuration = 1f; // Prevent division by zero
+        }
+
         playerSpotlight.intensity = 0f;
         playerSpotlight.enabled = false;
         globalLight.intensity = 0.7f;
+
+        // Start the initial cycle
+        StartCycle();
     }
 
-    void OnDestroy()
+    void OnEnable()
     {
-        if (daySystem != null)
-        {
-            DaySystem.OnDayStart -= StartCycle;
-            DaySystem.OnDayEnd -= StopCycle;
-            DaySystem.OnTimeOut -= TriggerTimeOver;
-            DaySystem.OnPrepareEnd -= TriggerNextDay;
-        }
+        DaySystem.OnDayStart += StartCycle;
+    }
+
+    void OnDisable()
+    {
+        DaySystem.OnDayStart -= StartCycle;
+
     }
 
     void Update()
     {
-        if (isCycleStopped)
+        if (isCycleStopped || daySystem == null)
         {
             return;
         }
 
-        // Increment timer based on the time scale
         timer += Time.deltaTime * timeScale;
+        float normalizedTime = Mathf.Repeat(timer / totalCycleDuration, 1f);
 
-        // Calculate time of day as a PingPong between 0 and 1
-        float timeOfDay = Mathf.PingPong(timer / totalCycleDuration, 1f);
+        globalLight.color = dayNightGradient.Evaluate(normalizedTime);
+        UpdateLightAndSpotlight(normalizedTime);
+        UpdateClock(normalizedTime);
 
-        // Update global light and spotlight based on time of day
-        globalLight.color = dayNightGradient.Evaluate(timeOfDay);
-        UpdateLightAndSpotlight(timeOfDay);
-        UpdateClock(timeOfDay);
-
-        // Update the fill amount (progress) from 0 to 1
         if (timeFillImage != null)
         {
-            timeFillImage.fillAmount = Mathf.Clamp01(timer / totalCycleDuration);
+            timeFillImage.fillAmount = Mathf.Clamp01(normalizedTime);
         }
 
-        // Check if the cycle has completed
         if (timer >= totalCycleDuration)
         {
-            isCycleStopped = true;
-            timer = totalCycleDuration;
-
-            // Trigger events for the end of the day
-            DaySystem.OnTimeOut?.Invoke();
-            DaySystem.OnDayEnd?.Invoke();
+            EndCycle();
         }
     }
 
-    private void UpdateLightAndSpotlight(float timeOfDay)
+    private void UpdateLightAndSpotlight(float normalizedTime)
     {
-        float dayProgress = Mathf.Clamp01(timeOfDay / 0.5f);
-        float nightProgress = Mathf.Clamp01((timeOfDay - 0.5f) / 0.5f);
+        float dayProgress = Mathf.Clamp01(normalizedTime / 0.5f);
+        float nightProgress = Mathf.Clamp01((normalizedTime - 0.5f) / 0.5f);
 
-        if (timeOfDay < 0.5f)
+        if (normalizedTime < 0.5f)
         {
             globalLight.intensity = Mathf.Lerp(0.7f, 0.8f, dayProgress);
             playerSpotlight.enabled = false;
@@ -115,20 +107,19 @@ public class DayNightCycle : MonoBehaviour
         }
     }
 
-    private void UpdateClock(float timeOfDay)
+    private void UpdateClock(float normalizedTime)
     {
         float startHour = 7f;
         float endHour = 19f;
         float nightStartHour = 19.01f;
         float nightEndHour = 24f;
 
-        float currentHour = timeOfDay < 0.5f
-            ? Mathf.Lerp(startHour, endHour, timeOfDay * 2f)
-            : Mathf.Lerp(nightStartHour, nightEndHour, (timeOfDay - 0.5f) * 2f);
+        float currentHour = normalizedTime < 0.5f
+            ? Mathf.Lerp(startHour, endHour, normalizedTime * 2f)
+            : Mathf.Lerp(nightStartHour, nightEndHour, (normalizedTime - 0.5f) * 2f);
 
         int hours = Mathf.FloorToInt(currentHour);
         int minutes = Mathf.FloorToInt((currentHour - hours) * 60f);
-
         string timeString = $"{hours:D2}:{minutes:D2}";
 
         if (clockText != null)
@@ -137,36 +128,18 @@ public class DayNightCycle : MonoBehaviour
         }
     }
 
-    public void RestartCycle()
-    {
-        Debug.Log("RestartCycle: Restarting the day-night cycle.");
-        Player.ChangePlayerCanActBool?.Invoke(true);
-        isCycleStopped = false;
-        timer = 0f;
-    }
-
     public void StartCycle()
     {
-        Debug.Log("StartCycle: Starting the day-night cycle.");
         isCycleStopped = false;
         timer = 0f;
+        Debug.Log("Day-Night Cycle Started.");
     }
 
-    public void StopCycle()
+    public void EndCycle()
     {
-        Debug.Log("StopCycle: Stopping the day-night cycle.");
+        DaySystem.OnTimeOut?.Invoke();
         isCycleStopped = true;
-    }
+        Debug.Log("Day-Night Cycle Ended.");
 
-    public void TriggerTimeOver()
-    {
-        Debug.Log("TriggerTimeOver: Time over. Stopping the day-night cycle.");
-        isCycleStopped = false;
-    }
-
-    public void TriggerNextDay()
-    {
-        Debug.Log("TriggerNextDay: Preparing for the next day.");
-        RestartCycle();
     }
 }

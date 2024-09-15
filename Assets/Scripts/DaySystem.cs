@@ -35,7 +35,7 @@ public class DaySystem : MonoBehaviour
 
     private void Update()
     {
-        UpdateTimer();
+        //UpdateTimer();
     }
 
     public float GetRemainingTime()

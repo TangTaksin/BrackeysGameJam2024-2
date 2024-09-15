@@ -209,6 +209,7 @@ GameObject:
   - component: {fileID: 72428432}
   - component: {fileID: 72428431}
   - component: {fileID: 72428430}
+  - component: {fileID: 72428433}
   m_Layer: 5
   m_Name: E
   m_TagString: Untagged
@@ -330,6 +331,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72428428}
   m_CullTransparentMesh: 1
+--- !u!225 &72428433
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72428428}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &87117580
 GameObject:
   m_ObjectHideFlags: 0
@@ -540,8 +553,8 @@ MonoBehaviour:
   max_storm_types: 4
   StormType: 01000000020000000300000004000000
   targets: 5
-  minTargets: 40
-  maxTargets: 50
+  minTargets: 30
+  maxTargets: 35
 --- !u!114 &95165387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -554,7 +567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5cc7aa703eab8740b3b2597f32dc7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prepareTime: 60
+  prepareTime: 0
 --- !u!4 &95165388
 Transform:
   m_ObjectHideFlags: 0
@@ -2684,7 +2697,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 453603704}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0f0de77e76b6f147b8ea3704297d676, type: 3}
   m_Name: 
@@ -2726,7 +2739,7 @@ MonoBehaviour:
   spotlightMaxIntensity: 0.8
   clockText: {fileID: 358536685}
   timeFillImage: {fileID: 1482976584}
-  timeScale: 1
+  timeScale: 2
   daySystem: {fileID: 95165387}
 --- !u!114 &453603706
 MonoBehaviour:
@@ -4109,6 +4122,7 @@ MonoBehaviour:
   baseWalkSpeed: 5
   baseStamina: 100
   StaminaOutPenelty: 50
+  stamina_penely: 0
   _selectedInteractable: {fileID: 0}
   _InteractableList: []
   _heldItem: {fileID: 0}
@@ -7378,6 +7392,8 @@ MonoBehaviour:
   _died_tmpro: {fileID: 626783139}
   add_tmpro: {fileID: 103418496}
   _button_tmpro: {fileID: 738062312}
+  _button_canvasG: {fileID: 72428433}
+  canPressTime: 1
 --- !u!1 &1171363384
 GameObject:
   m_ObjectHideFlags: 0
@@ -7427,7 +7443,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.287
   m_Color: {r: 0.9975668, g: 1, b: 0.7830188, a: 1}
-  m_Intensity: 0.64
+  m_Intensity: 0.8
   m_LightVolumeIntensity: 0.12
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 0000000083b8ed8cbb8639d3c9d8204de346cdc72f55de68153fcb97
@@ -7448,8 +7464,8 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0.7
-  m_PointLightOuterRadius: 2.2
+  m_PointLightInnerRadius: 2.79
+  m_PointLightOuterRadius: 4.39
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -8066,6 +8082,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  elem_perce_array: []
   Wind: {fileID: 21300000, guid: f9a155784830a5447999380c888cfc27, type: 3}
   Rain: {fileID: 21300000, guid: 42d6045291c2b6143b9b1678f020c35f, type: 3}
   Hail: {fileID: 21300000, guid: b420183e171cf3341859260c2e202151, type: 3}
@@ -8641,7 +8658,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1446712358}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c181ae89b6a566a469951bfe139ce8c7, type: 3}
   m_Name: 
@@ -8996,7 +9013,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 0
+  m_FillAmount: 1
   m_FillClockwise: 0
   m_FillOrigin: 2
   m_UseSpriteMesh: 0
@@ -9124,7 +9141,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &1544130650
 RectTransform:

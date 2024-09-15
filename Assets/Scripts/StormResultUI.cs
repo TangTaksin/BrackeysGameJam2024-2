@@ -56,7 +56,7 @@ public class StormResultUI : MonoBehaviour
         if (_panel.activeSelf && canPress)
         {
             if (suceeded)
-                GenericSceneLoader.TriggerLoadScene("ProtoEndScene");
+                GenericSceneLoader.TriggerLoadScene("EndScene");
             else
                 Transition.CalledFadeIn?.Invoke();
 
@@ -84,6 +84,9 @@ public class StormResultUI : MonoBehaviour
         if (!suceeded)
         {
             DaySystem.OnDayEnd?.Invoke();
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.morning_sfx);
+            AudioManager.Instance.PlayMusic(AudioManager.Instance.music_Bg);
+            AudioManager.Instance.PlayAmbient(AudioManager.Instance.ambient_Rain);
         }
     }
 
@@ -96,7 +99,7 @@ public class StormResultUI : MonoBehaviour
     {
         _neededPerc_tmpro.text = string.Format("needed {0}%", _plantgroup.FailThreshold);
 
-        var overall_value = _plantgroup.GetOveallStatus();
+        var overall_value = _plantgroup.GetOverallStatus();
         _overall_fill.fillAmount = overall_value;
         _overall_tmpro.text = string.Format("{0}%", overall_value * 100);
 

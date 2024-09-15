@@ -1,17 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlantGroup : MonoBehaviour
 {
     public Plant[] plantGroup;
 
-    [Range(0,100)] public float FailThreshold;
-    bool _failed;
+    [Range(0, 100)] public float FailThreshold;
+    private bool _failed;
+    private bool _hasCheckedFailStatus = false; // Track if fail status has been checked
 
-
-    float _baseIntegrity;
-    float _integrity;
+    private float _baseIntegrity;
+    private float _integrity;
 
     public int _damagedCount;
     public int _deadCount;
@@ -22,6 +20,7 @@ public class PlantGroup : MonoBehaviour
         StormSystem.OnStormEnd += UpdateOverall;
         Plant.OnDamage += DamageCheck;
         DaySystem.OnDayStart += ResetStatistic;
+        DaySystem.OnDayStart += ResetFailStatusCheck; // Reset fail status check at the start of each day
     }
 
     private void OnDisable()
@@ -29,6 +28,7 @@ public class PlantGroup : MonoBehaviour
         StormSystem.OnStormEnd -= UpdateOverall;
         Plant.OnDamage -= DamageCheck;
         DaySystem.OnDayStart -= ResetStatistic;
+        DaySystem.OnDayStart -= ResetFailStatusCheck;
     }
 
     public void GetDefaultIntegrity()
@@ -39,7 +39,6 @@ public class PlantGroup : MonoBehaviour
             _baseIntegrity += plant.plantdata.baseHitPoint;
         }
     }
-
 
     public void CheckOverallIntegrity()
     {
@@ -56,19 +55,39 @@ public class PlantGroup : MonoBehaviour
         CheckOverallIntegrity();
     }
 
-    public float GetOveallStatus()
+    public float GetOverallStatus()
     {
         UpdateOverall();
+        // Prevent division by zero
+        if (_baseIntegrity == 0)
+            return 0;
+
         return _integrity / _baseIntegrity;
     }
 
     public bool CheckFailStatus()
     {
-        var status = GetOveallStatus();
-        return _failed = (status * 100 < FailThreshold);
+        if (_hasCheckedFailStatus)
+        {
+            Debug.Log("Fail status already checked for today.");
+            return _failed;
+        }
+
+        var status = GetOverallStatus();
+        Debug.Log($"CheckFailStatus - Status: {status}, Fail Threshold: {FailThreshold}, Failed: {status < FailThreshold}");
+
+        // Compare the status directly with the FailThreshold
+        _failed = (status * 100 < FailThreshold);
+        _hasCheckedFailStatus = true; // Mark as checked
+        return _failed;
     }
 
-    void DamageCheck(Plant _plant,int _takenDamage, bool _resisted, bool _proteted, bool _died, bool _attacked)
+    private void ResetFailStatusCheck()
+    {
+        _hasCheckedFailStatus = false; // Reset for the new day
+    }
+
+    void DamageCheck(Plant _plant, int _takenDamage, bool _resisted, bool _proteted, bool _died, bool _attacked)
     {
         if (_takenDamage > 0)
             _damagedCount++;
@@ -91,5 +110,4 @@ public class PlantGroup : MonoBehaviour
         _PreventedCount = 0;
         _deadCount = 0;
     }
-
 }

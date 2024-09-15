@@ -5617,6 +5617,7 @@ MonoBehaviour:
   baseWalkSpeed: 5
   baseStamina: 100
   StaminaOutPenelty: 50
+  stamina_penely: 0
   _selectedInteractable: {fileID: 0}
   _InteractableList: []
   _heldItem: {fileID: 0}
@@ -6209,6 +6210,8 @@ MonoBehaviour:
   _died_tmpro: {fileID: 626783139}
   add_tmpro: {fileID: 0}
   _button_tmpro: {fileID: 0}
+  _button_canvasG: {fileID: 0}
+  canPressTime: 0
 --- !u!1001 &1170411729
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10166,7 +10169,6 @@ MonoBehaviour:
   clockText: {fileID: 358536685}
   timeFillImage: {fileID: 1482976584}
   timeScale: 1
-  daySystem: {fileID: 0}
 --- !u!114 &2136895116
 MonoBehaviour:
   m_ObjectHideFlags: 0

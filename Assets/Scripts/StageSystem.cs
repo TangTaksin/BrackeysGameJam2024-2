@@ -1,80 +1,97 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class StageSystem : MonoBehaviour
 {
-    public PlantGroup plantGroup;
+    [Header("Configuration")]
+    [SerializeField] private PlantGroup plantGroup;
+    [SerializeField] private int dayLimit = 3;
 
-    public int DayLimit = 3;
-    static int _day = 1;
-    public int day
-    {
-        get { return _day; }
-        set
-        {
-            _day = value;
-            if (dayTMP)
-            {
-                dayTMP.text = string.Format("DAY {0}", _day);
+    [Header("UI Elements")]
+    [SerializeField] private TextMeshProUGUI dayTMP;
 
-                if (_day >= DayLimit)
-                    dayTMP.text = string.Format("LAST DAY");
-            }
-        }
-    }
+    private int currentDay;
 
-    public TextMeshProUGUI dayTMP;
-
-    public delegate void StageEvent(bool _bool);
-    public static StageEvent OnReset;
-    public static StageEvent OnLastDay;
+    public delegate void StageEvent(bool isLastDay);
+    public static event StageEvent OnReset;
+    public static event StageEvent OnLastDay;
 
     private void OnEnable()
     {
-        DaySystem.OnDayEnd += OnDayEnd;
-        day = 1;
+        DaySystem.OnDayEnd += HandleDayEnd;
+        InitializeDay();
     }
 
     private void OnDisable()
     {
-        DaySystem.OnDayEnd -= OnDayEnd;
+        DaySystem.OnDayEnd -= HandleDayEnd;
     }
 
-    void OnDayEnd()
+    private void InitializeDay()
     {
-        //fail check
-        var failed = plantGroup.CheckFailStatus();
+        currentDay = 1;
+        UpdateDayText();
+    }
+
+    private void HandleDayEnd()
+    {
+        bool failed = plantGroup.CheckFailStatus();
 
         if (failed)
         {
-            RestartProgress();
-            return;
+            ResetProgress(); // Reset to day 1 if failed
         }
+        else
+        {
+            bool isLastDay = TryAdvanceDay();
 
-        var lastDay = DayCheck();
-
-        OnLastDay?.Invoke(lastDay);
+            if (isLastDay)
+            {
+                LoadEndScene(); 
+            }
+            else
+            {
+                OnLastDay?.Invoke(isLastDay);
+            }
+        }
     }
 
-    void RestartProgress()
+    private void ResetProgress()
     {
-        day = 1;
+        currentDay = 1; // Reset to day 1
+        UpdateDayText();
         OnReset?.Invoke(true);
     }
 
-    bool DayCheck()
+    private bool TryAdvanceDay()
     {
-        bool lastDay = false;
-
-        day++;
-        if (day >= DayLimit)
+        if (currentDay < dayLimit)
         {
-
-            lastDay = true;
+            currentDay++;
+            UpdateDayText();
+            return false; // Not the last day
         }
+        return true; // It's the last day
+    }
 
-        return lastDay;
+    private void UpdateDayText()
+    {
+        if (dayTMP != null)
+        {
+            if (currentDay >= dayLimit)
+            {
+                dayTMP.text = "LAST DAY";
+            }
+            else
+            {
+                dayTMP.text = $"DAY {currentDay}";
+            }
+        }
+    }
+
+    private void LoadEndScene()
+    {
+        SceneManager.LoadScene("EndScene");
     }
 }
