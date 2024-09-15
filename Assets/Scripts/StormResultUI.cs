@@ -70,10 +70,11 @@ public class StormResultUI : MonoBehaviour
 
         var _item = _stageSystem.HandleDayEnd();
 
-        suceeded = _item.Item2;
+        lastDay = _item.Item2;
         failed = _item.Item1;
 
         suceeded = (lastDay && !failed);
+        print("succeed : " + suceeded);
 
         _panel.SetActive(true);
         UpdateResult();
